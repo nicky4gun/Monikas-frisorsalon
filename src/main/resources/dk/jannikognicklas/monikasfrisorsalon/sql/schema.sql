@@ -9,7 +9,7 @@ create table employee
 create table hair_treatment
 (
     id         int primary key auto_increment,
-    name       varchar(40) not null,
+    name       varchar(40) not null, // til en enum
     timeLength int         not null,
     price double not null
 );
