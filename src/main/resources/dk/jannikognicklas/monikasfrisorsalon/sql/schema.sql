@@ -1,30 +1,37 @@
-create table employee
-(
-    id       int primary key auto_increment,
-    name     varchar(20) not null,
-    username varchar(20) not null unique,
-    password varchar(10) not null
+CREATE DATABASE monikas_frisorsalon;
+USE monikas_frisorsalon;
 
+CREATE TABLE employees (
+    id       int PRIMARY KEY AUTO_INCREMENT,
+    name     varchar(20) NOT NULL,
+    username varchar(20) NOT NULL UNIQUE,
+    password varchar(100) NOT NULL
 );
-create table hair_treatment
-(
-    id         int primary key auto_increment,
-    name       varchar(40) not null, // til en enum
-    timeLength int         not null,
-    price double not null
-);
-create table booking
-(
-    id                int primary key auto_increment,
-    startdato         datetime    not null,
-    enddato           datetime    not null,
-    employee_id       int         not null,
-    hair_treatment_id int         not null,
-    status            varchar(20) not null,
-    foreign key (employee_id) references employee (id),
-    foreign key (hair_treatment_id) references hair_treatment (id)
-        customer_name varchar (40) not null,
-    email             varchar(50),
-    phonenumber       int
 
-)
+CREATE TABLE customers (
+    id         int PRIMARY KEY AUTO_INCREMENT,
+    name       VARCHAR(50) NOT NULL,
+    email      VARCHAR(100),
+    phone      VARCHAR(20)
+);
+
+CREATE TABLE hair_treatments (
+    id         int PRIMARY KEY AUTO_INCREMENT,
+    name       varchar(40) NOT NULL, -- til en enum
+    duration   int NOT NULL,
+    price      DECIMAL(8, 2) NOT NULL
+);
+
+CREATE TABLE bookings (
+    id                  int PRIMARY KEY AUTO_INCREMENT,
+    start_time          datetime NOT NULL,
+    end_time            datetime NOT NULL,
+    employee_id         int NOT NULL,
+    customer_id         int NOT NULL,
+    hair_treatment_id   int NOT NULL,
+    status              ENUM('BOOKED', 'CANCELLED', 'COMPLETED') NOT NULL,
+
+    FOREIGN KEY (employee_id)       REFERENCES employees(id),
+    FOREIGN KEY (customer_id)       REFERENCES customers(id),
+    FOREIGN KEY (hair_treatment_id) REFERENCES hair_treatments(id)
+);
