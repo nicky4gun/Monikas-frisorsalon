@@ -20,6 +20,7 @@ create table booking
     enddato           datetime not null,
     employee_id       int not null,
     hair_treatment_id int not null,
+    status varchar(20) not null,
     foreign key (employee_id) references employee (id),
     foreign key (hair_treatment_id) references hair_treatment (id)
 )
