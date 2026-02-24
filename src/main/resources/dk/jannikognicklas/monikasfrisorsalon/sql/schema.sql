@@ -17,7 +17,7 @@ CREATE TABLE customers (
 
 CREATE TABLE hair_treatments (
     id         int PRIMARY KEY AUTO_INCREMENT,
-    name       varchar(40) NOT NULL, -- til en enum
+    hairtreatmens       ENUM  ('update this') NOT NULL,
     duration   int NOT NULL,
     price      DECIMAL(8, 2) NOT NULL
 );
