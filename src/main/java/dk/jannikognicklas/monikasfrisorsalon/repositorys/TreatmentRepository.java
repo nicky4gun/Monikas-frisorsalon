@@ -1,4 +1,4 @@
 package dk.jannikognicklas.monikasfrisorsalon.repositorys;
 
-public class HairTreatmensRepository {
+public class TreatmentRepository {
 }

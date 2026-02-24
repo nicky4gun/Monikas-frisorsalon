@@ -6,4 +6,6 @@ module dk.jannikognicklas.monikasfrsiorsalon {
 
     opens dk.jannikognicklas.monikasfrisorsalon to javafx.fxml;
     exports dk.jannikognicklas.monikasfrisorsalon;
+    exports dk.jannikognicklas.monikasfrisorsalon.controllers;
+    opens dk.jannikognicklas.monikasfrisorsalon.controllers to javafx.fxml;
 }

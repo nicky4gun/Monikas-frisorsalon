@@ -68,7 +68,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                dk.jannikognicklas.monikasfrsiorsalon/dk.jannikognicklas.monikasfrisorsalon.HelloApplication
+                                dk.jannikognicklas.monikasfrsiorsalon/dk.jannikognicklas.monikasfrisorsalon.HairDresserApplication
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>

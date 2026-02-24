@@ -1,17 +1,17 @@
 package dk.jannikognicklas.monikasfrisorsalon.model;
 
-public class Customers {
- private  int id;
- private String Name;
- private String email;
- private int phoneNumber;
+public class Customer {
+    private  int id;
+    private String Name;
+    private String email;
+    private int phoneNumber;
 
- public Customers(int id, String Name, String email, int phoneNumber) {
+    public Customer(int id, String Name, String email, int phoneNumber) {
      this.id = id;
      this.Name = Name;
      this.email = email;
      this.phoneNumber = phoneNumber;
- }
+    }
 
     public int getId() {
         return id;

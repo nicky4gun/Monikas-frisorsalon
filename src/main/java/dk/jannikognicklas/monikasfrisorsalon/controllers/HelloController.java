@@ -1,4 +1,4 @@
-package dk.jannikognicklas.monikasfrisorsalon;
+package dk.jannikognicklas.monikasfrisorsalon.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

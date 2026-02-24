@@ -1,14 +1,14 @@
 package dk.jannikognicklas.monikasfrisorsalon.model;
 
-public class HairTreatments {
+public class HairTreatment {
     private  int id;
-    private String hairTreatmens;
+    private String hairTreatment;
     private  int duration  ;
     private  double price;
 
-    public  HairTreatments(int id, String hairTreatmens, int duration, double price) {
+    public HairTreatment(int id, String hairTreatment, int duration, double price) {
         this.id = id;
-        this.hairTreatmens = hairTreatmens;
+        this.hairTreatment = hairTreatment;
         this.duration = duration;
         this.price = price;
 
@@ -22,12 +22,12 @@ public class HairTreatments {
         this.id = id;
     }
 
-    public String getHairTreatmens() {
-        return hairTreatmens;
+    public String getHairTreatment() {
+        return hairTreatment;
     }
 
-    public void setHairTreatmens(String hairTreatmens) {
-        this.hairTreatmens = hairTreatmens;
+    public void setHairTreatment(String hairTreatment) {
+        this.hairTreatment = hairTreatment;
     }
 
     public int getDuration() {

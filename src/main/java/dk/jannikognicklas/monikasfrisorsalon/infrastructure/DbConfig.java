@@ -1,4 +1,4 @@
-package dk.jannikognicklas.monikasfrisorsalon.infrastruktor;
+package dk.jannikognicklas.monikasfrisorsalon.infrastructure;
 
 import java.io.IOException;
 import java.io.InputStream;

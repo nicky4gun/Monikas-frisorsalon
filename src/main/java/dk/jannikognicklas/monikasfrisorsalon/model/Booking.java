@@ -13,8 +13,16 @@ public class Booking {
     private int hairTreatmentId;
     private Status status;
 
+    public Booking(LocalDateTime startTime, LocalDateTime endTime, int employeeId, int customerId, int hairTreatmentId, Status status) {
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.employeeId = employeeId;
+        this.customerId = customerId;
+        this.hairTreatmentId = hairTreatmentId;
+        this.status = status;
+    }
 
-    public Booking(int id, LocalDateTime startTime, LocalDateTime endTime, int employeeId, int customerId,int hairTreatmentId ,Status status) {
+    public Booking(int id, LocalDateTime startTime, LocalDateTime endTime, int employeeId, int customerId, int hairTreatmentId , Status status) {
         this.id = id;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -72,7 +80,6 @@ public class Booking {
     public void setHairTreatmentId(int hairTreatmentId) {
         this.hairTreatmentId = hairTreatmentId;
     }
-
 
     public Status getStatus() {
         return status;
