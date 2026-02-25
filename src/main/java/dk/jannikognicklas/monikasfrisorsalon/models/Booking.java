@@ -1,6 +1,6 @@
-package dk.jannikognicklas.monikasfrisorsalon.model;
+package dk.jannikognicklas.monikasfrisorsalon.models;
 
-import dk.jannikognicklas.monikasfrisorsalon.model.enums.Status;
+import dk.jannikognicklas.monikasfrisorsalon.models.enums.Status;
 
 import java.time.LocalDateTime;
 

@@ -1,6 +1,3 @@
-CREATE DATABASE monikas_frisorsalon;
-USE monikas_frisorsalon;
-
 CREATE TABLE employees (
     id       int PRIMARY KEY AUTO_INCREMENT,
     name     varchar(20) NOT NULL,
@@ -17,7 +14,7 @@ CREATE TABLE customers (
 
 CREATE TABLE hair_treatments (
     id                 int PRIMARY KEY AUTO_INCREMENT,
-    hair_treatment     ENUM ('MALE', 'FEMALE', 'KID') NOT NULL,
+    hair_treatment     VARCHAR(10) NOT NULL,
     duration           int NOT NULL,
     price              DECIMAL(8, 2) NOT NULL
 );
@@ -29,7 +26,7 @@ CREATE TABLE bookings (
     employee_id         int NOT NULL,
     customer_id         int NOT NULL,
     hair_treatment_id   int NOT NULL,
-    status              ENUM('BOOKED', 'CANCELLED', 'COMPLETED') NOT NULL,
+    status              VARCHAR(10) NOT NULL,
 
     FOREIGN KEY (employee_id)       REFERENCES employees(id),
     FOREIGN KEY (customer_id)       REFERENCES customers(id),

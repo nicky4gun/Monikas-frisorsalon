@@ -1,8 +1,8 @@
 package dk.jannikognicklas.monikasfrisorsalon.services;
 
-import dk.jannikognicklas.monikasfrisorsalon.model.Booking;
-import dk.jannikognicklas.monikasfrisorsalon.model.enums.Status;
-import dk.jannikognicklas.monikasfrisorsalon.repositorys.BookingRepository;
+import dk.jannikognicklas.monikasfrisorsalon.models.Booking;
+import dk.jannikognicklas.monikasfrisorsalon.models.enums.Status;
+import dk.jannikognicklas.monikasfrisorsalon.repositories.BookingRepository;
 
 import java.time.LocalDateTime;
 
@@ -17,8 +17,8 @@ public class BookingService {
         bookingRepository.addBooking(new Booking( startTime, endTime,  employeeId,  customerId,  hairTreatmentId, status));
     }
 
-    public void findBookingById(int bookingId) {
-        bookingRepository.findBookingById(bookingId);
+    public Booking findBookingById(int bookingId) {
+        return bookingRepository.findBookingById(bookingId);
     }
 
     public void findBookingByEmployeeId(int employeeId) {bookingRepository.findBookingByEmployeeId(employeeId);}

@@ -1,4 +1,4 @@
-package dk.jannikognicklas.monikasfrisorsalon.model;
+package dk.jannikognicklas.monikasfrisorsalon.models;
 
 public class Employee {
     private int id;
