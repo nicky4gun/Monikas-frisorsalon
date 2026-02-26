@@ -13,6 +13,11 @@ public class Employee {
         this.password = password;
 
     }
+    public Employee(String name, String username, String password) {
+        this.name = name;
+        this.username = username;
+        this.password = password;
+    }
 
     public int getId() {
         return id;
@@ -44,5 +49,10 @@ public class Employee {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

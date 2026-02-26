@@ -2,35 +2,38 @@ package dk.jannikognicklas.monikasfrisorsalon.models;
 
 import dk.jannikognicklas.monikasfrisorsalon.models.enums.Status;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class Booking {
     private int id;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private LocalDate date;
+    private LocalTime time;
     private int employeeId;
     private int customerId;
     private int hairTreatmentId;
     private Status status;
+    private String note;
 
-    public Booking(LocalDateTime startTime, LocalDateTime endTime, int employeeId, int customerId, int hairTreatmentId, Status status) {
-        this.startTime = startTime;
-        this.endTime = endTime;
+    public Booking(LocalDate date, LocalTime time, int employeeId, int customerId, int hairTreatmentId, Status status, String note) {
+        this.date = date;
+        this.time = time;
         this.employeeId = employeeId;
         this.customerId = customerId;
         this.hairTreatmentId = hairTreatmentId;
         this.status = status;
+        this.note = note;
     }
 
-    public Booking(int id, LocalDateTime startTime, LocalDateTime endTime, int employeeId, int customerId, int hairTreatmentId , Status status) {
+    public Booking(int id, LocalDate date, LocalTime time, int employeeId, int customerId, int hairTreatmentId, Status status,String note) {
         this.id = id;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.date = date;
+        this.time = time;
         this.employeeId = employeeId;
         this.customerId = customerId;
         this.hairTreatmentId = hairTreatmentId;
         this.status = status;
-
+        this.note = note;
     }
 
     public int getId() {
@@ -41,20 +44,20 @@ public class Booking {
         this.id = id;
     }
 
-    public LocalDateTime getStartTime() {
-        return startTime;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
-    public LocalDateTime getEndTime() {
-        return endTime;
+    public LocalTime getTime() {
+        return time;
     }
 
-    public void setEndTime(LocalDateTime endTime) {
-        this.endTime = endTime;
+    public void setTime(LocalTime time) {
+        this.time = time;
     }
 
     public int getEmployeeId() {
@@ -88,6 +91,9 @@ public class Booking {
     public void setStatus(Status status) {
         this.status = status;
     }
+
+    public String getNote() {return note;}
+    public void setNote(String note) {this.note = note;}
 }
 
 

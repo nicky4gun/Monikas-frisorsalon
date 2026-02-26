@@ -11,7 +11,9 @@ import org.junit.jupiter.api.Test;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -51,19 +53,21 @@ class BookingServiceTest {
 
     @Test
     void addBooking_shouldStoreInDB() {
-        LocalDateTime starTime = LocalDateTime.of(2026, 2, 24, 19, 0);
-        LocalDateTime endTime = LocalDateTime.of(2026, 2, 24, 19,30);
+        LocalDate date = LocalDate.of(2026,3,1);
+        LocalTime time = LocalTime.of( 14,30);
         int employeeId = 1;
         int customerId = 1;
         int hairTreatmentId = 1;
         Status status = Status.BOOKED;
+        String note = "bob: jeg vil gerne have krøller siger hanne";
 
-        bookingService.addBooking(starTime, endTime, employeeId, customerId, hairTreatmentId, status);
+        bookingService.addBooking(date, time, employeeId, customerId, hairTreatmentId, status, note);
 
         Booking result = bookingService.findBookingById(1);
         assertNotNull(result);
         assertEquals(Status.BOOKED, result.getStatus());
-        assertEquals(LocalDateTime.of(2026, 2, 24, 19, 0), result.getStartTime());
+        assertEquals(LocalDate.of(2026, 3,1), result.getDate());
+        assertEquals(LocalTime.of(14,30), result.getTime());
     }
 
     @Test

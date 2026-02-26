@@ -24,12 +24,13 @@ CREATE TABLE hair_treatments (
 
 CREATE TABLE bookings (
     id                  int PRIMARY KEY AUTO_INCREMENT,
-    start_time          datetime NOT NULL,
-    end_time            datetime NOT NULL,
+    date                DATE NOT NULL,
+    time                TIME NOT NULL,
     employee_id         int NOT NULL,
     customer_id         int NOT NULL,
     hair_treatment_id   int NOT NULL,
     status              ENUM('BOOKED', 'CANCELLED', 'COMPLETED') NOT NULL,
+    note                 varchar(200),
 
     FOREIGN KEY (employee_id)       REFERENCES employees(id),
     FOREIGN KEY (customer_id)       REFERENCES customers(id),

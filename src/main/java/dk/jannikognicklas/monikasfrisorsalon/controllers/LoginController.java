@@ -1,8 +1,8 @@
 package dk.jannikognicklas.monikasfrisorsalon.controllers;
 
+import dk.jannikognicklas.monikasfrisorsalon.models.Employee;
 import dk.jannikognicklas.monikasfrisorsalon.services.EmployeeService;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -33,8 +33,10 @@ public class LoginController implements ViewController<EmployeeService> {
         String password = passwordField.getText();
 
         try {
-            if (employeeService.checkLogin(username, password)) {
-                viewSwitcher.goToDashboard();
+            Employee loggedInEmployee = employeeService.checkLogin(username, password);
+
+            if (loggedInEmployee != null) {
+                viewSwitcher.goToDashboard(loggedInEmployee);
 
             } else {
                 showLoginMessage("Wrong username or password", Color.RED);

@@ -1,12 +1,14 @@
 package dk.jannikognicklas.monikasfrisorsalon.models;
 
+import dk.jannikognicklas.monikasfrisorsalon.models.enums.Treatments;
+
 public class HairTreatment {
     private  int id;
-    private String hairTreatment;
+    private Treatments hairTreatment;
     private  int duration  ;
     private  double price;
 
-    public HairTreatment(int id, String hairTreatment, int duration, double price) {
+    public HairTreatment(int id, Treatments hairTreatment, int duration, double price) {
         this.id = id;
         this.hairTreatment = hairTreatment;
         this.duration = duration;
@@ -22,11 +24,11 @@ public class HairTreatment {
         this.id = id;
     }
 
-    public String getHairTreatment() {
+    public Treatments getHairTreatment() {
         return hairTreatment;
     }
 
-    public void setHairTreatment(String hairTreatment) {
+    public void setHairTreatment(Treatments hairTreatment) {
         this.hairTreatment = hairTreatment;
     }
 
@@ -44,5 +46,10 @@ public class HairTreatment {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(hairTreatment);
     }
 }

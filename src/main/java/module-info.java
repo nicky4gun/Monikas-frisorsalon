@@ -2,8 +2,6 @@ module dk.jannikognicklas.monikasfrsiorsalon {
     requires javafx.controls;
     requires javafx.fxml;
     requires java.sql;
-    requires dk.jannikognicklas.monikasfrsiorsalon;
-
 
     opens dk.jannikognicklas.monikasfrisorsalon to javafx.fxml;
     exports dk.jannikognicklas.monikasfrisorsalon;

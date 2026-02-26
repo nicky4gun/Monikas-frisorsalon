@@ -4,7 +4,10 @@ import dk.jannikognicklas.monikasfrisorsalon.models.Booking;
 import dk.jannikognicklas.monikasfrisorsalon.models.enums.Status;
 import dk.jannikognicklas.monikasfrisorsalon.repositories.BookingRepository;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BookingService {
     private final BookingRepository bookingRepository;
@@ -13,18 +16,24 @@ public class BookingService {
         this.bookingRepository = bookingRepository;
     }
 
-    public void addBooking(LocalDateTime startTime, LocalDateTime endTime, int employeeId, int customerId, int hairTreatmentId, Status status) {
-        bookingRepository.addBooking(new Booking( startTime, endTime,  employeeId,  customerId,  hairTreatmentId, status));
+    public void addBooking(LocalDate date, LocalTime time, int employeeId, int customerId, int hairTreatmentId, Status status,String note) {
+        bookingRepository.addBooking(new Booking( date, time,  employeeId,  customerId,  hairTreatmentId, status,note));
+    }
+
+    public List<Booking> findAllBookings() {
+        return bookingRepository.findAllBookings();
     }
 
     public Booking findBookingById(int bookingId) {
         return bookingRepository.findBookingById(bookingId);
     }
 
-    public void findBookingByEmployeeId(int employeeId) {bookingRepository.findBookingByEmployeeId(employeeId);}
+    public List<Booking> getBookingsByDateAndEmployee(LocalDate date, int employeeId) {
+        return bookingRepository.findBookingsByDateAndEmployee(date, employeeId);
+    }
 
-    public  void updateBooking(LocalDateTime startTime, LocalDateTime endTime, int employeeId, int customerId, int hairTreatmentId, Status status) {
-        bookingRepository.updateBooking(new Booking(startTime, endTime,  employeeId,  customerId,  hairTreatmentId, status));
+    public  void updateBooking(LocalDate date, LocalTime time, int employeeId, int customerId, int hairTreatmentId, Status status,String note) {
+        bookingRepository.updateBooking(new Booking(date, time,  employeeId,  customerId,  hairTreatmentId, status,note));
     }
 
     public void cancelBooking(int bookingId) {

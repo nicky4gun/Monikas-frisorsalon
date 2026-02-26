@@ -3,8 +3,12 @@ package dk.jannikognicklas.monikasfrisorsalon.services;
 import dk.jannikognicklas.monikasfrisorsalon.models.Customer;
 import dk.jannikognicklas.monikasfrisorsalon.repositories.CustomerRepository;
 
+import java.util.List;
+
 public class CustomersService {
+
     private final CustomerRepository customerRepository;
+
     public CustomersService( CustomerRepository customerRepository) {this.customerRepository = customerRepository;}
 
     public void addCustomer(String name,String email,int phone){
@@ -13,5 +17,8 @@ public class CustomersService {
 
     public void UpdateCustomer(String name,String email,int phone){
         customerRepository.UpdateCustomer(new Customer(name,email,phone));
+    }
+    public List<Customer> findAllCustomers(){
+        return customerRepository.findAllCustomer();
     }
 }

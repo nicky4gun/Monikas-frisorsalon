@@ -5,7 +5,9 @@ import dk.jannikognicklas.monikasfrisorsalon.models.Booking;
 import dk.jannikognicklas.monikasfrisorsalon.models.enums.Status;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,18 +19,19 @@ public class BookingRepository {
     }
 
     public void addBooking(Booking booking) {
-        String sql = "INSERT INTO bookings (start_time, end_time, employee_id, customer_id, hair_treatment_id, status) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO bookings (date, time, employee_id, customer_id, hair_treatment_id, status,note) VALUES (?, ?, ?, ?, ?, ?,?)";
         try (Connection conn = config.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-            stmt.setTimestamp(1, Timestamp.valueOf(booking.getStartTime()));
-            stmt.setTimestamp(2, Timestamp.valueOf(booking.getEndTime()));
+            stmt.setDate(1, Date.valueOf(booking.getDate()));
+            stmt.setTime(2, Time.valueOf(booking.getTime()));
             stmt.setInt(3, booking.getEmployeeId());
             stmt.setInt(4, booking.getCustomerId());
             stmt.setInt(5, booking.getHairTreatmentId());
             stmt.setString(6, String.valueOf(booking.getStatus()));
-
+            stmt.setString(7,booking.getNote());
             stmt.executeUpdate();
+
             try (ResultSet rs = stmt.getGeneratedKeys()) {
                 if (rs.next()) {
                     booking.setId(rs.getInt(1));
@@ -43,6 +46,35 @@ public class BookingRepository {
         }
     }
 
+    public List<Booking> findAllBookings() {
+        List<Booking> bookings = new ArrayList<>();
+        String sql = "SELECT * FROM bookings ORDER BY date DESC";
+
+        try (Connection conn = config.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                LocalDate date = rs.getDate("date").toLocalDate();
+                LocalTime time = rs.getTime("time").toLocalTime();
+                int employeeId = rs.getInt("employee_id");
+                int customerId = rs.getInt("customer_id");
+                int hairTreatmentId = rs.getInt("hair_treatment_id");
+                Status status = Status.valueOf(rs.getString("status"));
+                String note = rs.getString("note");
+
+                bookings.add(new Booking(id, date, time, employeeId, customerId, hairTreatmentId, status,note));
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("An error occurred trying to find Booking by employee id " + e);
+        }
+
+        return bookings;
+
+    }
+
     public Booking findBookingById(int bookingId) {
         String sql = "SELECT * FROM bookings WHERE id = ?";
         
@@ -54,14 +86,15 @@ public class BookingRepository {
 
             if (rs.next()) {
                 int id = rs.getInt("id");
-                LocalDateTime startTime = rs.getTimestamp("start_time").toLocalDateTime();
-                LocalDateTime endTime = rs.getTimestamp("end_time").toLocalDateTime();
+                LocalDate date = rs.getDate("date").toLocalDate();
+                LocalTime time = rs.getTime("time").toLocalTime();
                 int employeeId = rs.getInt("employee_id");
                 int customerId = rs.getInt("customer_id");
                 int hairTreatmentId = rs.getInt("hair_treatment_id");
                 Status status = Status.valueOf(rs.getString("status"));
+                String note = rs.getString("note");
 
-                return new Booking(id, startTime, endTime, employeeId, customerId, hairTreatmentId, status);
+                return new Booking(id, date, time, employeeId, customerId, hairTreatmentId, status,note);
             }
 
         } catch (SQLException e) {
@@ -71,25 +104,27 @@ public class BookingRepository {
         return null;
     }
 
-    public List<Booking> findBookingByEmployeeId(int employeeId) {
+    public List<Booking> findBookingsByDateAndEmployee(LocalDate date, int employeeId) {
         List<Booking> bookings = new ArrayList<>();
-        String sql = "SELECT * FROM bookings WHERE employee_id = ? AND status = 'BOOKED'";
+        String sql = "SELECT * FROM bookings WHERE date = ? AND employee_id = ? AND status = 'BOOKED' ORDER BY time DESC";
 
         try (Connection conn = config.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setInt(1, employeeId);
+            stmt.setDate(1, Date.valueOf(date));
+            stmt.setInt(2, employeeId);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     int id = rs.getInt("id");
-                    LocalDateTime startTime = rs.getTimestamp("start_time").toLocalDateTime();
-                    LocalDateTime endTime = rs.getTimestamp("end_time").toLocalDateTime();
+                    LocalDate bookingDate = rs.getDate("date").toLocalDate();
+                    LocalTime time = rs.getTime("time").toLocalTime();
                     int customerId = rs.getInt("customer_id");
                     int hairTreatmentId = rs.getInt("hair_treatment_id");
                     Status status = Status.valueOf(rs.getString("status"));
+                    String note = rs.getString("note");
 
-                    bookings.add(new Booking(id, startTime, endTime, employeeId, customerId, hairTreatmentId, status));
+                    bookings.add(new Booking(id, bookingDate, time, employeeId, customerId, hairTreatmentId, status,note));
                 }
             }
         } catch (SQLException e) {
@@ -100,15 +135,16 @@ public class BookingRepository {
     }
 
     public void updateBooking(Booking booking) {
-        String sql = "UPDATE bookings set start_time = ?, end_time = ?, employe_id = ?, customer_id = ?, hair_treatment_id = ?, status = ? where id = ?)";
+        String sql = "UPDATE bookings set date = ?, time = ?, employe_id = ?, customer_id = ?, hair_treatment_id = ?, status = ? where id = ?)";
         try (Connection conn = config.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-            stmt.setTimestamp(1, Timestamp.valueOf(booking.getStartTime()));
-            stmt.setTimestamp(2, Timestamp.valueOf(booking.getEndTime()));
-            stmt.setInt(3, booking.getCustomerId());
-            stmt.setInt(4, booking.getHairTreatmentId());
-            stmt.setString(5, String.valueOf(booking.getStatus()));
+            stmt.setDate(1, Date.valueOf(booking.getDate()));
+            stmt.setTime(2, Time.valueOf(booking.getTime()));
+            stmt.setInt(3, booking.getEmployeeId());
+            stmt.setInt(4, booking.getCustomerId());
+            stmt.setInt(5, booking.getHairTreatmentId());
+            stmt.setString(6, String.valueOf(booking.getStatus()));
             stmt.executeUpdate();
 
             try (ResultSet rs = stmt.getGeneratedKeys()) {
