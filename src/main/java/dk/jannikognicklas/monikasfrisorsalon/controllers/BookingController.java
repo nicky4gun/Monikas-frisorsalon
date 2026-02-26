@@ -30,7 +30,6 @@ public class BookingController implements ViewController<BookingService> {
 
     @FXML
     DatePicker datePicker;
-    private final DateTimeFormatter timeFmt = DateTimeFormatter.ofPattern("HH:mm");
 
     @FXML TextField timeField;
     @FXML TextField nameField;
@@ -170,6 +169,20 @@ public class BookingController implements ViewController<BookingService> {
         }
 
         refreshSelectedDate();
+    }
+
+    @FXML
+    protected void onConfirmSelected() {
+        Booking selected = bookingView.getSelectionModel().getSelectedItem();
+
+        try {
+            if (selected != null) {
+                bookings.remove(selected);
+                bookingService.completeBooking(selected.getId());
+            }
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
     }
 
     private void refreshSelectedDate() {

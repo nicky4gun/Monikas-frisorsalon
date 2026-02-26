@@ -1,5 +1,6 @@
 package dk.jannikognicklas.monikasfrisorsalon.controllers;
 
+import dk.jannikognicklas.monikasfrisorsalon.HairDresserApplication;
 import dk.jannikognicklas.monikasfrisorsalon.models.Employee;
 import dk.jannikognicklas.monikasfrisorsalon.services.BookingService;
 import dk.jannikognicklas.monikasfrisorsalon.services.CustomersService;
@@ -33,7 +34,7 @@ public class ViewSwitcher {
 
     public void goToBooking(Employee loggedInEmployee) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/dk/jannikognicklas/monikasfrisorsalon/calendar-view.fxml"));
+            FXMLLoader loader = new FXMLLoader(HairDresserApplication.class.getResource("views/calendar-view.fxml"));
             Parent view = loader.load();
 
             BookingController controller = loader.getController();
@@ -54,7 +55,7 @@ public class ViewSwitcher {
 
     public void goToDashboard(Employee loggedInEmployee) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/dk/jannikognicklas/monikasfrisorsalon/dashboard-view.fxml"));
+            FXMLLoader loader = new FXMLLoader(HairDresserApplication.class.getResource("views/dashboard-view.fxml"));
             Parent view = loader.load();
 
             DashboardController controller = loader.getController();
@@ -72,7 +73,7 @@ public class ViewSwitcher {
 
     private <T> void switchTo(String fxml, T service) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/dk/jannikognicklas/monikasfrisorsalon/" + fxml));
+            FXMLLoader loader = new FXMLLoader(HairDresserApplication.class.getResource("views/" + fxml));
             Parent view = loader.load();
 
             ViewController<T> controller = loader.getController();

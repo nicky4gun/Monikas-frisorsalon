@@ -19,7 +19,7 @@ public class BookingRepository {
     }
 
     public void addBooking(Booking booking) {
-        String sql = "INSERT INTO bookings (date, time, employee_id, customer_id, hair_treatment_id, status,note) VALUES (?, ?, ?, ?, ?, ?,?)";
+        String sql = "INSERT INTO bookings (date, time, employee_id, customer_id, hair_treatment_id, status, note) VALUES (?, ?, ?, ?, ?, ?,?)";
         try (Connection conn = config.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
@@ -36,10 +36,7 @@ public class BookingRepository {
                 if (rs.next()) {
                     booking.setId(rs.getInt(1));
                 }
-            } catch (SQLException e) {
-                throw new RuntimeException("An error occurred trying to add new booking", e);
             }
-
 
         } catch (SQLException e) {
             throw new RuntimeException("an error occurred while trying to insert a booking", e);
@@ -55,16 +52,7 @@ public class BookingRepository {
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                int id = rs.getInt("id");
-                LocalDate date = rs.getDate("date").toLocalDate();
-                LocalTime time = rs.getTime("time").toLocalTime();
-                int employeeId = rs.getInt("employee_id");
-                int customerId = rs.getInt("customer_id");
-                int hairTreatmentId = rs.getInt("hair_treatment_id");
-                Status status = Status.valueOf(rs.getString("status"));
-                String note = rs.getString("note");
-
-                bookings.add(new Booking(id, date, time, employeeId, customerId, hairTreatmentId, status,note));
+                bookings.add(mapBooking(rs));
             }
 
         } catch (SQLException e) {
@@ -82,19 +70,11 @@ public class BookingRepository {
              PreparedStatement stmt = conn.prepareStatement(sql);) {
 
             stmt.setInt(1, bookingId);
-            ResultSet rs = stmt.executeQuery();
 
-            if (rs.next()) {
-                int id = rs.getInt("id");
-                LocalDate date = rs.getDate("date").toLocalDate();
-                LocalTime time = rs.getTime("time").toLocalTime();
-                int employeeId = rs.getInt("employee_id");
-                int customerId = rs.getInt("customer_id");
-                int hairTreatmentId = rs.getInt("hair_treatment_id");
-                Status status = Status.valueOf(rs.getString("status"));
-                String note = rs.getString("note");
-
-                return new Booking(id, date, time, employeeId, customerId, hairTreatmentId, status,note);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return mapBooking(rs);
+                }
             }
 
         } catch (SQLException e) {
@@ -116,17 +96,10 @@ public class BookingRepository {
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    int id = rs.getInt("id");
-                    LocalDate bookingDate = rs.getDate("date").toLocalDate();
-                    LocalTime time = rs.getTime("time").toLocalTime();
-                    int customerId = rs.getInt("customer_id");
-                    int hairTreatmentId = rs.getInt("hair_treatment_id");
-                    Status status = Status.valueOf(rs.getString("status"));
-                    String note = rs.getString("note");
-
-                    bookings.add(new Booking(id, bookingDate, time, employeeId, customerId, hairTreatmentId, status,note));
+                    bookings.add(mapBooking(rs));
                 }
             }
+
         } catch (SQLException e) {
             throw new RuntimeException("An error occurred trying to find Booking by employee id " + e);
         }
@@ -135,9 +108,9 @@ public class BookingRepository {
     }
 
     public void updateBooking(Booking booking) {
-        String sql = "UPDATE bookings set date = ?, time = ?, employe_id = ?, customer_id = ?, hair_treatment_id = ?, status = ? where id = ?)";
+        String sql = "UPDATE bookings set date = ?, time = ?, employee_id = ?, customer_id = ?, hair_treatment_id = ?, status = ? WHERE id = ?";
         try (Connection conn = config.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setDate(1, Date.valueOf(booking.getDate()));
             stmt.setTime(2, Time.valueOf(booking.getTime()));
@@ -145,19 +118,13 @@ public class BookingRepository {
             stmt.setInt(4, booking.getCustomerId());
             stmt.setInt(5, booking.getHairTreatmentId());
             stmt.setString(6, String.valueOf(booking.getStatus()));
+            stmt.setInt(7, booking.getId());
             stmt.executeUpdate();
-
-            try (ResultSet rs = stmt.getGeneratedKeys()) {
-                if (rs.next()) {
-                    booking.setId(rs.getInt(1));
-                }
-            }
 
         } catch (SQLException e) {
             throw new RuntimeException("an error occurred while trying to insert a booking", e);
         }
     }
-    
 
     // Sletning af bestilling ift. skats lovgiving
     public boolean cancelBooking(int bookingId) {
@@ -190,5 +157,18 @@ public class BookingRepository {
         } catch (SQLException e) {
             throw new RuntimeException("An error occurred trying to complete Booking" + e);
         }
+    }
+
+    private Booking mapBooking(ResultSet rs) throws SQLException {
+        return new Booking(
+                rs.getInt("id"),
+                rs.getDate("date").toLocalDate(),
+                rs.getTime("time").toLocalTime(),
+                rs.getInt("employee_id"),
+                rs.getInt("customer_id"),
+                rs.getInt("hair_treatment_id"),
+                Status.valueOf(rs.getString("status")),
+                rs.getString("note")
+        );
     }
 }

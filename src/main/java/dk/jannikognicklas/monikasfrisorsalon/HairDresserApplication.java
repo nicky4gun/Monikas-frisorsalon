@@ -39,7 +39,7 @@ public class HairDresserApplication extends Application {
         // ViewSwitcher setup
         ViewSwitcher viewSwitcher = new ViewSwitcher(stage, bookingService, employeeService, treatmentService, customersService);
 
-        FXMLLoader fxmlLoader = new FXMLLoader(HairDresserApplication.class.getResource("login-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(HairDresserApplication.class.getResource("views/login-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 297, 240);
         stage.setTitle("Hårmoni'ka Bookingsystem");
 
