@@ -100,7 +100,7 @@ public class BookingRepository {
     }
 
     public void updateBooking(Booking booking) {
-        String sql = "UPDATE bookings (start_time, end_time, employe_id, customer_id, hair_treatment_id, status) VALUES (?, ?, ?, ?, ?)";
+        String sql = "UPDATE bookings set start_time = ?, end_time = ?, employe_id = ?, customer_id = ?, hair_treatment_id = ?, status = ? where id = ?)";
         try (Connection conn = config.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 

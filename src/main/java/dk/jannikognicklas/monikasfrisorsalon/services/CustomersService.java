@@ -8,10 +8,10 @@ public class CustomersService {
     public CustomersService( CustomerRepository customerRepository) {this.customerRepository = customerRepository;}
 
     public void addCustomer(String name,String email,int phone){
-        CustomerRepository.addCustomer(new Customer(name,email,phone));
+        customerRepository.addCustomer(new Customer(name,email,phone));
     }
 
     public void UpdateCustomer(String name,String email,int phone){
-        CustomerRepository.UpdateCustomer(new Customer(name,email,phone));
+        customerRepository.UpdateCustomer(new Customer(name,email,phone));
     }
 }
