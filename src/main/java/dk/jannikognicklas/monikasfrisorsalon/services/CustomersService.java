@@ -18,6 +18,7 @@ public class CustomersService {
     public void UpdateCustomer(String name,String email,int phone){
         customerRepository.UpdateCustomer(new Customer(name,email,phone));
     }
+
     public List<Customer> findAllCustomers(){
         return customerRepository.findAllCustomer();
     }

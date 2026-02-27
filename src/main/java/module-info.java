@@ -17,4 +17,10 @@ module dk.jannikognicklas.monikasfrsiorsalon {
 
     opens dk.jannikognicklas.monikasfrisorsalon.models to javafx.fxml;
     exports dk.jannikognicklas.monikasfrisorsalon.models;
+
+    opens dk.jannikognicklas.monikasfrisorsalon.models.enums to javafx.fxml;
+    exports  dk.jannikognicklas.monikasfrisorsalon.models.enums;
+
+    opens dk.jannikognicklas.monikasfrisorsalon.infrastructure to javafx.fxml;
+    exports dk.jannikognicklas.monikasfrisorsalon.infrastructure;
 }

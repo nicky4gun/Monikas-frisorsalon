@@ -28,8 +28,7 @@ public class BookingController implements ViewController<BookingService> {
 
     private Employee loggedInEmployee;
 
-    @FXML
-    DatePicker datePicker;
+    @FXML DatePicker datePicker;
 
     @FXML TextField timeField;
     @FXML TextField nameField;
@@ -156,7 +155,7 @@ public class BookingController implements ViewController<BookingService> {
     }
 
     @FXML
-    protected void onDeleteSelected() {
+    protected void onCancelSelected() {
         Booking selected = bookingView.getSelectionModel().getSelectedItem();
 
         try {
@@ -172,7 +171,7 @@ public class BookingController implements ViewController<BookingService> {
     }
 
     @FXML
-    protected void onConfirmSelected() {
+    protected void onCompleteSelected() {
         Booking selected = bookingView.getSelectionModel().getSelectedItem();
 
         try {
@@ -184,6 +183,14 @@ public class BookingController implements ViewController<BookingService> {
             e.printStackTrace();
         }
     }
+
+    @FXML
+    protected void onGoBack() {
+        viewSwitcher.goToDashboard(loggedInEmployee);
+    }
+
+    @FXML
+    protected void onUpdateBooking() {}
 
     private void refreshSelectedDate() {
         LocalDate date = datePicker.getValue();

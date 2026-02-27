@@ -39,7 +39,7 @@ public class BookingRepository {
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException("an error occurred while trying to insert a booking", e);
+            throw new RuntimeException("An error occurred while trying to insert a booking", e);
         }
     }
 
@@ -122,7 +122,7 @@ public class BookingRepository {
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            throw new RuntimeException("an error occurred while trying to insert a booking", e);
+            throw new RuntimeException("An error occurred while trying to insert a booking", e);
         }
     }
 
