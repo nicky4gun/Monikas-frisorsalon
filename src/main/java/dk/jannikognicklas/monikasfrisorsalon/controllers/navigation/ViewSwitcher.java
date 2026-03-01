@@ -1,6 +1,8 @@
-package dk.jannikognicklas.monikasfrisorsalon.controllers;
+package dk.jannikognicklas.monikasfrisorsalon.controllers.navigation;
 
 import dk.jannikognicklas.monikasfrisorsalon.HairDresserApplication;
+import dk.jannikognicklas.monikasfrisorsalon.controllers.BookingController;
+import dk.jannikognicklas.monikasfrisorsalon.controllers.DashboardController;
 import dk.jannikognicklas.monikasfrisorsalon.models.Employee;
 import dk.jannikognicklas.monikasfrisorsalon.services.BookingService;
 import dk.jannikognicklas.monikasfrisorsalon.services.CustomersService;
@@ -30,6 +32,10 @@ public class ViewSwitcher {
 
     public void goToLogin() {
         switchTo("login-view.fxml", employeeService);
+    }
+
+    public void goToSignUp() {
+        switchTo("signup-view.fxml", employeeService);
     }
 
     public void goToBooking(Employee loggedInEmployee) {

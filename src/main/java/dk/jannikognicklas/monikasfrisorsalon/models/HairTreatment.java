@@ -1,14 +1,14 @@
 package dk.jannikognicklas.monikasfrisorsalon.models;
 
-import dk.jannikognicklas.monikasfrisorsalon.models.enums.Treatments;
+import dk.jannikognicklas.monikasfrisorsalon.models.enums.Treatment;
 
 public class HairTreatment {
     private  int id;
-    private Treatments hairTreatment;
+    private Treatment hairTreatment;
     private  int duration  ;
     private  double price;
 
-    public HairTreatment(int id, Treatments hairTreatment, int duration, double price) {
+    public HairTreatment(int id, Treatment hairTreatment, int duration, double price) {
         this.id = id;
         this.hairTreatment = hairTreatment;
         this.duration = duration;
@@ -24,11 +24,11 @@ public class HairTreatment {
         this.id = id;
     }
 
-    public Treatments getHairTreatment() {
+    public Treatment getHairTreatment() {
         return hairTreatment;
     }
 
-    public void setHairTreatment(Treatments hairTreatment) {
+    public void setHairTreatment(Treatment hairTreatment) {
         this.hairTreatment = hairTreatment;
     }
 

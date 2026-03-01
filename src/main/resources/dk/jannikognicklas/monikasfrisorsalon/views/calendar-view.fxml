@@ -11,87 +11,54 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="594.0" prefWidth="895.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.jannikognicklas.monikasfrisorsalon.controllers.BookingController">
+<BorderPane prefHeight="594.0" prefWidth="1077.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.jannikognicklas.monikasfrisorsalon.controllers.BookingController">
 
     <padding>
         <Insets bottom="10" left="10" right="10" top="10" />
     </padding>
 
-    <!-- Top: kunde input -->
     <top>
         <VBox spacing="8">
-         <HBox alignment="TOP_RIGHT" prefHeight="0.0" prefWidth="874.0">
-            <children>
-                   <TextField fx:id="nameField" promptText="Navn" />
-               <TextField fx:id="emailField" promptText="Email">
-                  <HBox.margin>
-                     <Insets left="8.0" />
-                  </HBox.margin>
-               </TextField>
-               <TextField fx:id="phoneField" promptText="Tlf.">
-                  <HBox.margin>
-                     <Insets left="8.0" />
-                  </HBox.margin>
-               </TextField>
-               <Button mnemonicParsing="false" onAction="#onAddCustomer" text="Tilføj Kunde">
-                  <HBox.margin>
-                     <Insets left="8.0" right="8.0" />
-                  </HBox.margin>
-               </Button>
-               <Region prefHeight="26.0" prefWidth="261.0" />
-               <Button mnemonicParsing="false" onAction="#onGoBack" text="Tilbage">
-                  <HBox.margin>
-                     <Insets />
-                  </HBox.margin>
-               </Button>
-            </children>
-         </HBox>
+            <HBox alignment="TOP_RIGHT" prefHeight="0.0" prefWidth="874.0">
+                <Button mnemonicParsing="false" onAction="#onGoBack" text="Tilbage" />
+            </HBox>
         </VBox>
     </top>
 
-    <!-- Left: dato -->
     <left>
         <VBox spacing="8" BorderPane.alignment="TOP_LEFT">
             <Label text="Vælg dato">
-            <VBox.margin>
-               <Insets top="10.0" />
-            </VBox.margin></Label>
+                <VBox.margin>
+                    <Insets top="10.0" />
+                </VBox.margin>
+            </Label>
             <DatePicker fx:id="datePicker" onAction="#onDateChanged" />
-         <Label text="Actions">
-            <VBox.margin>
-               <Insets top="20.0" />
-            </VBox.margin>
-         </Label>
-            <Button onAction="#onCancelSelected" text="Afmeld">
-            <VBox.margin>
-               <Insets />
-            </VBox.margin>
-         </Button>
-         <Button onAction="#onCompleteSelected" text="Gennemført">
-            <VBox.margin>
-               <Insets top="-2.0" />
-            </VBox.margin>
-         </Button>
+            <Label text="Actions">
+                <VBox.margin>
+                    <Insets top="20.0" />
+                </VBox.margin>
+            </Label>
+            <Button onAction="#onCancelSelected" text="Afmeld" />
+            <Button onAction="#onCompleteSelected" text="Gennemført" />
         </VBox>
     </left>
 
-    <!-- Center: tabel med aftaler -->
     <center>
         <VBox spacing="8.0">
             <Label fx:id="bookingDateLabel" text="Aftaler for valgt dato">
-            <VBox.margin>
-               <Insets left="5.0" top="10.0" />
-            </VBox.margin></Label>
+                <VBox.margin>
+                    <Insets left="5.0" top="10.0" />
+                </VBox.margin>
+            </Label>
             <TableView fx:id="bookingView" VBox.vgrow="ALWAYS">
                 <columns>
                     <TableColumn fx:id="timeCol" prefWidth="80" text="Tid" />
                     <TableColumn fx:id="nameCol" prefWidth="104.0" text="Navn" />
-               <TableColumn fx:id="hairTreatmentCol" prefWidth="150.0" text="Behandling" />
-               <TableColumn fx:id="employeeCol" prefWidth="110.0" text="Frisør" />
-                    <TableColumn fx:id="noteCol" prefWidth="249.5999633789063" text="Note" />
+                    <TableColumn fx:id="hairTreatmentCol" prefWidth="150.0" text="Behandling" />
+                    <TableColumn fx:id="employeeCol" prefWidth="110.0" text="Frisør" />
+                    <TableColumn fx:id="noteCol" prefWidth="249.5999633789063" text="Noter" />
                 </columns>
             <VBox.margin>
                <Insets left="5.0" />
@@ -100,51 +67,31 @@
         </VBox>
     </center>
 
-    <!-- Bottom: input til ny aftale-->
-   <bottom>
-      <VBox prefHeight="62.0" prefWidth="942.0" BorderPane.alignment="CENTER">
-         <children>
-               <Label text="Ny aftale">
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
-            </Label>
-            <HBox prefHeight="7.0" prefWidth="1135.0">
-               <children>
-                      <TextField fx:id="timeField" promptText="Tid (HH:mm)" />
-                  <ComboBox fx:id="employeeBox" prefWidth="150.0" promptText="Vælg frisør">
-                     <HBox.margin>
-                        <Insets left="8.0" right="8.0" />
-                     </HBox.margin>
-                  </ComboBox>
-                  <ComboBox fx:id="customerBox" prefWidth="150.0" promptText="Vælg Kunde">
-                     <HBox.margin>
-                        <Insets right="8.0" />
-                     </HBox.margin>
-                  </ComboBox>
-                  <ComboBox fx:id="treatmentBox" prefWidth="150.0" promptText="Vælg Behandling">
-                     <HBox.margin>
-                        <Insets right="10.0" />
-                     </HBox.margin>
-                  </ComboBox>
-                      <Button onAction="#onAddBooking" text="Tilføj" />
-                  <Button mnemonicParsing="false" onAction="#onUpdateBooking" text="Opdater">
-                     <HBox.margin>
-                        <Insets left="8.0" />
-                     </HBox.margin>
-                  </Button>
-               </children>
-               <VBox.margin>
-                  <Insets top="5.0" />
-               </VBox.margin>
-            </HBox>
-               <TextArea fx:id="noteArea" prefHeight="66.0" prefRowCount="2" prefWidth="862.0" promptText="Note">
-               <VBox.margin>
-                  <Insets top="10.0" />
-               </VBox.margin>
-            </TextArea>
-         </children>
-      </VBox>
-   </bottom>
-
+   <right>
+       <VBox prefHeight="453.0" prefWidth="181.0" spacing="8.0" BorderPane.alignment="CENTER">
+           <BorderPane.margin>
+               <Insets left="5.0" />
+           </BorderPane.margin>
+           <Label text="Ny aftale">
+             <VBox.margin><Insets top="10.0" /></VBox.margin>
+           </Label>
+           <TextField fx:id="timeField" promptText="Tid (HH:mm)" />
+           <ComboBox fx:id="employeeBox" prefWidth="150.0" promptText="Vælg frisør" />
+           <ComboBox fx:id="customerBox" prefWidth="150.0" promptText="Vælg Kunde" />
+           <ComboBox fx:id="treatmentBox" prefWidth="150.0" promptText="Vælg Behandling" />
+           <Label text="Kundens information">
+              <VBox.margin>
+                  <Insets top="20.0" />
+              </VBox.margin>
+           </Label>
+           <TextField fx:id="nameField" promptText="Navn" />
+           <TextField fx:id="emailField" promptText="Email" />
+           <TextField fx:id="phoneField" promptText="Tlf." />
+           <TextArea fx:id="noteArea" prefHeight="66.0" prefRowCount="2" prefWidth="862.0" promptText="Note" />
+           <HBox prefHeight="0.0" prefWidth="182.0" spacing="8.0">
+               <Button onAction="#onAddBooking" text="Tilføj" />
+               <Button mnemonicParsing="false" onAction="#onUpdateBooking" text="Opdater" />
+           </HBox>
+       </VBox>
+   </right>
 </BorderPane>

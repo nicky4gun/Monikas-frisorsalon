@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -34,18 +35,15 @@ class BookingServiceTest {
     }
 
     @BeforeEach
-    void setUp() throws SQLException {
+    void setUp() throws SQLException, IOException {
         config = new DbConfig();
         Connection conn = config.getConnection();
 
-        conn.createStatement().execute("DELETE FROM bookings");
-        conn.createStatement().execute("DELETE FROM customers");
-        conn.createStatement().execute("DELETE FROM employees");
-        conn.createStatement().execute("DELETE FROM hair_treatments");
+        InputStream data = BookingServiceTest.class.getClassLoader().getResourceAsStream("test-data.sql");
 
-        conn.createStatement().execute("INSERT INTO employees (name, username, password) VALUES ('Test Employee', 'testuser', 'password')");
-        conn.createStatement().execute("INSERT INTO customers (name) VALUES ('Test Customer')");
-        conn.createStatement().execute("INSERT INTO hair_treatments (hair_treatment, duration, price) VALUES ('MALE', 30, 99.99)");
+        assertNotNull(data);
+        String sql = new String(data.readAllBytes());
+        conn.createStatement().execute(sql);
 
         BookingRepository bookingRepository = new BookingRepository(config);
         bookingService = new BookingService(bookingRepository);

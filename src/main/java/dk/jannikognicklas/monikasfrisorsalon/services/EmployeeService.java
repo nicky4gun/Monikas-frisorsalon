@@ -12,6 +12,18 @@ public class EmployeeService {
         this.employeeRepository = employeeRepository;
     }
 
+    public Employee addEmployee(String name, String username, String password) {
+        if (name == null || name.isBlank()) throw new IllegalArgumentException("Please enter your name");
+        if (username == null || username.isBlank()) throw new IllegalArgumentException("Please enter your username");
+        if (password == null || password.isBlank()) throw new IllegalArgumentException("Please enter your password");
+
+        return employeeRepository.addEmployee(new Employee(name, username, password));
+    }
+
+    public boolean usernameExists(String username) {
+        return employeeRepository.usernameExists(username);
+    }
+
     public Employee checkLogin(String username, String password) {
         if (username == null || username.isBlank()) throw new IllegalArgumentException("Please enter your username");
         if (password == null || password.isBlank()) throw new IllegalArgumentException("Please enter your password");

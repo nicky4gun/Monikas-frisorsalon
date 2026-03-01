@@ -1,5 +1,5 @@
 package dk.jannikognicklas.monikasfrisorsalon.models.enums;
 
-public enum Treatments {
+public enum Treatment {
     MALE, FEMALE, KID
 }

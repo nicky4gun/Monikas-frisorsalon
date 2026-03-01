@@ -1,7 +1,7 @@
 package dk.jannikognicklas.monikasfrisorsalon;
 
 import dk.jannikognicklas.monikasfrisorsalon.controllers.LoginController;
-import dk.jannikognicklas.monikasfrisorsalon.controllers.ViewSwitcher;
+import dk.jannikognicklas.monikasfrisorsalon.controllers.navigation.ViewSwitcher;
 import dk.jannikognicklas.monikasfrisorsalon.infrastructure.DbConfig;
 import dk.jannikognicklas.monikasfrisorsalon.repositories.BookingRepository;
 import dk.jannikognicklas.monikasfrisorsalon.repositories.CustomerRepository;

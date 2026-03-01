@@ -1,5 +1,7 @@
 package dk.jannikognicklas.monikasfrisorsalon.controllers;
 
+import dk.jannikognicklas.monikasfrisorsalon.controllers.navigation.ViewController;
+import dk.jannikognicklas.monikasfrisorsalon.controllers.navigation.ViewSwitcher;
 import dk.jannikognicklas.monikasfrisorsalon.models.Employee;
 import dk.jannikognicklas.monikasfrisorsalon.services.BookingService;
 import javafx.fxml.FXML;

@@ -1,5 +1,7 @@
 package dk.jannikognicklas.monikasfrisorsalon.controllers;
 
+import dk.jannikognicklas.monikasfrisorsalon.controllers.navigation.ViewController;
+import dk.jannikognicklas.monikasfrisorsalon.controllers.navigation.ViewSwitcher;
 import dk.jannikognicklas.monikasfrisorsalon.models.Booking;
 import dk.jannikognicklas.monikasfrisorsalon.models.Customer;
 import dk.jannikognicklas.monikasfrisorsalon.models.Employee;
@@ -17,7 +19,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 
 public class BookingController implements ViewController<BookingService> {
     private ViewSwitcher viewSwitcher;
@@ -143,10 +144,6 @@ public class BookingController implements ViewController<BookingService> {
         bookingService.addBooking(date, time, selectededEmployee.getId(), selectedCustomer.getId(), selectedTreatment.getId(), Status.BOOKED, note);
 
         refreshSelectedDate();
-    }
-
-    @FXML
-    protected void onAddCustomer() {
     }
 
     @FXML

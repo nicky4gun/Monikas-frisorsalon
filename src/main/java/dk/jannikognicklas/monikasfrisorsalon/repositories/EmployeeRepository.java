@@ -3,10 +3,7 @@ package dk.jannikognicklas.monikasfrisorsalon.repositories;
 import dk.jannikognicklas.monikasfrisorsalon.infrastructure.DbConfig;
 import dk.jannikognicklas.monikasfrisorsalon.models.Employee;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +12,47 @@ public class EmployeeRepository {
 
     public EmployeeRepository(DbConfig config) {
         this.config = config;
+    }
+
+    public Employee addEmployee(Employee employee) {
+        String sql = "INSERT INTO employees (name, username, password) VALUES (?, ?, ?)";
+
+        try (Connection conn = config.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            stmt.setString(1, employee.getName());
+            stmt.setString(2, employee.getUsername());
+            stmt.setString(3, employee.getPassword());
+            stmt.executeUpdate();
+
+            try (ResultSet rs = stmt.getGeneratedKeys()) {
+                if (rs.next()) {
+                    employee.setId(rs.getInt(1));
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("An error occurred trying to add new user", e);
+        }
+
+        return employee;
+    }
+
+    public boolean usernameExists(String username) {
+        String sql = "SELECT 1 FROM employees WHERE username = ?";
+
+        try (Connection conn = config.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, username);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next();
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("An error occurred trying to find username", e);
+        }
     }
 
     public Employee checkLogin(String username, String password) {

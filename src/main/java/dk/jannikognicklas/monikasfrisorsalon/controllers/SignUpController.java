@@ -10,18 +10,19 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 
-public class LoginController implements ViewController<EmployeeService> {
+public class SignUpController implements ViewController<EmployeeService> {
     private ViewSwitcher viewSwitcher;
     private EmployeeService employeeService;
 
+    @FXML TextField nameSignUpField;
     @FXML TextField usernameField;
     @FXML PasswordField passwordField;
 
     @FXML Label loginMessageLabel;
 
     @Override
-    public void setService(EmployeeService service) {
-        this.employeeService = service;
+    public void setService(EmployeeService employeeService) {
+        this.employeeService = employeeService;
     }
 
     @Override
@@ -30,30 +31,27 @@ public class LoginController implements ViewController<EmployeeService> {
     }
 
     @FXML
-    protected void onLoginButtonPress() {
+    protected void onSignUpButtonPress() {
+        String name = nameSignUpField.getText();
         String username = usernameField.getText();
         String password = passwordField.getText();
 
         try {
-            Employee loggedInEmployee = employeeService.checkLogin(username, password);
+            boolean existingUser = employeeService.usernameExists(username);
 
-            if (loggedInEmployee == null) {
-                showLoginMessage("Wrong username or password", Color.RED);
+            if (existingUser) {
+                showSignUpMessage("Username is taken, please try another", Color.RED);
             } else {
-                viewSwitcher.goToDashboard(loggedInEmployee);
+                Employee newEmployee = employeeService.addEmployee(name, username, password);
+                viewSwitcher.goToDashboard(newEmployee);
             }
 
         } catch (IllegalArgumentException e) {
-            showLoginMessage("Invalid: " + e.getMessage(), Color.BLACK);
+            showSignUpMessage("Invalid: " + e.getMessage(), Color.RED);
         }
     }
 
-    @FXML
-    protected void onSignUpButtonPress() {
-        viewSwitcher.goToSignUp();
-    }
-
-    private void showLoginMessage(String message, Color color) {
+    private void showSignUpMessage(String message, Color color) {
         loginMessageLabel.setText(message);
         loginMessageLabel.setTextFill(color);
     }
