@@ -1,6 +1,7 @@
 package dk.jannikognicklas.monikasfrisorsalon.repositories;
 
 import dk.jannikognicklas.monikasfrisorsalon.infrastructure.DbConfig;
+import dk.jannikognicklas.monikasfrisorsalon.models.Employee;
 import dk.jannikognicklas.monikasfrisorsalon.models.HairTreatment;
 import dk.jannikognicklas.monikasfrisorsalon.models.enums.Treatment;
 
@@ -40,5 +41,33 @@ public class TreatmentRepository {
         }
 
         return treatments;
+    }
+    public HairTreatment findAllTreatmensById (int treatmentId) {
+        String sql = "SELECT * FROM hair_treatments WHERE id = ?";
+
+        try (Connection conn = config.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, treatmentId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return mapTreatment(rs);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("cant find Treatmens Id");
+        }
+
+        return null;
+    }
+
+    private HairTreatment mapTreatment(ResultSet rs) throws SQLException {
+        return new HairTreatment(
+                rs.getInt("id"),
+                Treatment.valueOf(rs.getString("hair_treatment")),
+                rs.getInt("duration"),
+                rs.getDouble("price")
+        );
     }
 }

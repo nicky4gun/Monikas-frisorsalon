@@ -3,6 +3,7 @@ module dk.jannikognicklas.monikasfrsiorsalon {
     requires javafx.fxml;
     requires java.sql;
 
+
     opens dk.jannikognicklas.monikasfrisorsalon to javafx.fxml;
     exports dk.jannikognicklas.monikasfrisorsalon;
 
@@ -23,6 +24,7 @@ module dk.jannikognicklas.monikasfrsiorsalon {
 
     opens dk.jannikognicklas.monikasfrisorsalon.infrastructure to javafx.fxml;
     exports dk.jannikognicklas.monikasfrisorsalon.infrastructure;
+
     exports dk.jannikognicklas.monikasfrisorsalon.controllers.navigation;
     opens dk.jannikognicklas.monikasfrisorsalon.controllers.navigation to javafx.fxml;
 }

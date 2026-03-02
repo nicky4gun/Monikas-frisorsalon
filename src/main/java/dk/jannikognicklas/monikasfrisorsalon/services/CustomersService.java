@@ -15,7 +15,11 @@ public class CustomersService {
         customerRepository.addCustomer(new Customer(name,email,phone));
     }
 
-    public void UpdateCustomer(String name,String email,int phone){
+    public Customer findCustomerById(int id) {
+        return customerRepository.findCustomerById(id);
+    }
+
+    public void updateCustomer(String name,String email,int phone){
         customerRepository.UpdateCustomer(new Customer(name,email,phone));
     }
 

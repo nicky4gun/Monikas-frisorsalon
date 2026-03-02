@@ -2,10 +2,7 @@ package dk.jannikognicklas.monikasfrisorsalon.controllers;
 
 import dk.jannikognicklas.monikasfrisorsalon.controllers.navigation.ViewController;
 import dk.jannikognicklas.monikasfrisorsalon.controllers.navigation.ViewSwitcher;
-import dk.jannikognicklas.monikasfrisorsalon.models.Booking;
-import dk.jannikognicklas.monikasfrisorsalon.models.Customer;
-import dk.jannikognicklas.monikasfrisorsalon.models.Employee;
-import dk.jannikognicklas.monikasfrisorsalon.models.HairTreatment;
+import dk.jannikognicklas.monikasfrisorsalon.models.*;
 import dk.jannikognicklas.monikasfrisorsalon.models.enums.Status;
 import dk.jannikognicklas.monikasfrisorsalon.services.BookingService;
 import dk.jannikognicklas.monikasfrisorsalon.services.CustomersService;
@@ -41,14 +38,15 @@ public class BookingController implements ViewController<BookingService> {
     @FXML ComboBox<HairTreatment> treatmentBox;
     @FXML ComboBox<Customer> customerBox;
 
-    @FXML TableView<Booking> bookingView;
-    @FXML TableColumn<Booking, Integer> timeCol;
-    @FXML TableColumn<Booking, String> nameCol;
-    @FXML TableColumn<Booking, String> noteCol;
-    @FXML TableColumn<Booking, String> employeeCol;
-    @FXML TableColumn<Booking, String> hairTreatmentCol;
+    @FXML TableView<BookingView> bookingView;
+    @FXML TableColumn<BookingView, String> timeCol;
+    @FXML TableColumn<BookingView, String> nameCol;
+    @FXML TableColumn<BookingView, String> employeeCol;
+    @FXML TableColumn<BookingView, String> hairTreatmentCol;
+    @FXML TableColumn<BookingView, String> noteCol;
+    @FXML TableColumn<BookingView, String> statusCol;
 
-    ObservableList<Booking> bookings;
+    ObservableList<BookingView> bookings;
     ObservableList<Employee> employees;
     ObservableList<HairTreatment> treatments;
 
@@ -85,13 +83,14 @@ public class BookingController implements ViewController<BookingService> {
     }
 
     private void initBookingTable() {
-        bookings = FXCollections.observableArrayList(bookingService.findAllBookings());
+        bookings = FXCollections.observableArrayList();
 
-        timeCol.setCellValueFactory(new PropertyValueFactory<>("time"));
-        nameCol.setCellValueFactory(new PropertyValueFactory<>("customerId"));
-        hairTreatmentCol.setCellValueFactory(new PropertyValueFactory<>("hairTreatmentId"));
-        employeeCol.setCellValueFactory(new PropertyValueFactory<>("employeeId"));
-        noteCol.setCellValueFactory(new PropertyValueFactory<>("note"));
+        timeCol.setCellValueFactory(cell -> new javafx.beans.property.SimpleStringProperty(cell.getValue().getTime().toString()));
+        nameCol.setCellValueFactory(cell -> new javafx.beans.property.SimpleStringProperty(cell.getValue().getCustomerName()));
+        hairTreatmentCol.setCellValueFactory(cell -> new javafx.beans.property.SimpleStringProperty(cell.getValue().getTreatment().toString()));
+        employeeCol.setCellValueFactory(cell -> new javafx.beans.property.SimpleStringProperty(cell.getValue().getEmployeeName()));
+        noteCol.setCellValueFactory(cell -> new javafx.beans.property.SimpleStringProperty(cell.getValue().getNote()));
+        statusCol.setCellValueFactory(cell -> new javafx.beans.property.SimpleStringProperty(cell.getValue().getStatus().toString()));
 
         bookingView.setItems(bookings);
     }
@@ -153,7 +152,7 @@ public class BookingController implements ViewController<BookingService> {
 
     @FXML
     protected void onCancelSelected() {
-        Booking selected = bookingView.getSelectionModel().getSelectedItem();
+        BookingView selected = bookingView.getSelectionModel().getSelectedItem();
 
         try {
             if (selected != null) {
@@ -169,7 +168,7 @@ public class BookingController implements ViewController<BookingService> {
 
     @FXML
     protected void onCompleteSelected() {
-        Booking selected = bookingView.getSelectionModel().getSelectedItem();
+        BookingView selected = bookingView.getSelectionModel().getSelectedItem();
 
         try {
             if (selected != null) {
@@ -187,7 +186,40 @@ public class BookingController implements ViewController<BookingService> {
     }
 
     @FXML
-    protected void onUpdateBooking() {}
+    protected void onUpdateBooking() {
+        BookingView selected = bookingView.getSelectionModel().getSelectedItem();
+
+        if (selected == null) return;
+
+        try {
+            LocalDate date = datePicker.getValue();
+            LocalTime time = LocalTime.parse(timeField.getText().trim());
+            Employee employee = employeeBox.getSelectionModel().getSelectedItem();
+            HairTreatment treatment = treatmentBox.getSelectionModel().getSelectedItem();
+            Customer customer = customerBox.getSelectionModel().getSelectedItem();
+            Status status = selected.getStatus();
+            String note = noteArea.getText();
+
+            bookingService.updateBooking(selected.getId(), date, time, employee.getId(), customer.getId(), treatment.getId(), status, note);
+            refreshSelectedDate();
+
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    protected void onEditBooking() {
+        BookingView selected = bookingView.getSelectionModel().getSelectedItem();
+
+        if (selected != null) {
+            timeField.setText(selected.getTime().toString());
+            employeeBox.setValue(employeeService.findEmployeeById(selected.getEmployeeId()));
+            treatmentBox.setValue(treatmentService.findHairTreatmentById(selected.getTreatmentId()));
+            customerBox.setValue(customersService.findCustomerById(selected.getCustomerId()));
+            noteArea.setText(selected.getNote());
+        }
+    }
 
     private void refreshSelectedDate() {
         LocalDate date = datePicker.getValue();

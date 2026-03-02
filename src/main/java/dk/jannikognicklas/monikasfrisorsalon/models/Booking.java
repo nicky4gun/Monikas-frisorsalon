@@ -25,7 +25,7 @@ public class Booking {
         this.note = note;
     }
 
-    public Booking(int id, LocalDate date, LocalTime time, int employeeId, int customerId, int hairTreatmentId, Status status,String note) {
+    public Booking(int id, LocalDate date, LocalTime time, int employeeId, int customerId, int hairTreatmentId, Status status, String note) {
         this.id = id;
         this.date = date;
         this.time = time;

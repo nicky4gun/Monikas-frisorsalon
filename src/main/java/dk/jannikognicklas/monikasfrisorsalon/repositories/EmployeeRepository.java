@@ -95,6 +95,25 @@ public class EmployeeRepository {
 
         return  employees;
     }
+    public Employee findEmployeesById(int employeeId) {
+        String sql = "SELECT * FROM employees WHERE id = ?";
+
+        try (Connection conn = config.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, employeeId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next())
+                    return mapEmployee(rs);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("cant find Employee Id")  ;
+        }
+
+        return null;
+    }
 
     private Employee mapEmployee(ResultSet rs) throws SQLException {
         return new Employee(

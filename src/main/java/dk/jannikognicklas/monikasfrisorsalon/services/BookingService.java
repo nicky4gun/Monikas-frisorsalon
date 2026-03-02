@@ -1,12 +1,12 @@
 package dk.jannikognicklas.monikasfrisorsalon.services;
 
 import dk.jannikognicklas.monikasfrisorsalon.models.Booking;
+import dk.jannikognicklas.monikasfrisorsalon.models.BookingView;
 import dk.jannikognicklas.monikasfrisorsalon.models.enums.Status;
 import dk.jannikognicklas.monikasfrisorsalon.repositories.BookingRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 
 public class BookingService {
@@ -28,12 +28,12 @@ public class BookingService {
         return bookingRepository.findBookingById(bookingId);
     }
 
-    public List<Booking> getBookingsByDateAndEmployee(LocalDate date, int employeeId) {
+    public List<BookingView> getBookingsByDateAndEmployee(LocalDate date, int employeeId) {
         return bookingRepository.findBookingsByDateAndEmployee(date, employeeId);
     }
 
-    public  void updateBooking(LocalDate date, LocalTime time, int employeeId, int customerId, int hairTreatmentId, Status status,String note) {
-        bookingRepository.updateBooking(new Booking(date, time,  employeeId,  customerId,  hairTreatmentId, status,note));
+    public  void updateBooking(int id, LocalDate date, LocalTime time, int employeeId, int customerId, int hairTreatmentId, Status status,String note) {
+        bookingRepository.updateBooking(new Booking(id, date, time,  employeeId,  customerId,  hairTreatmentId, status,note));
     }
 
     public void cancelBooking(int bookingId) {

@@ -56,9 +56,10 @@
                 <columns>
                     <TableColumn fx:id="timeCol" prefWidth="80" text="Tid" />
                     <TableColumn fx:id="nameCol" prefWidth="104.0" text="Navn" />
-                    <TableColumn fx:id="hairTreatmentCol" prefWidth="150.0" text="Behandling" />
-                    <TableColumn fx:id="employeeCol" prefWidth="110.0" text="Frisør" />
-                    <TableColumn fx:id="noteCol" prefWidth="249.5999633789063" text="Noter" />
+                    <TableColumn fx:id="hairTreatmentCol" prefWidth="96.00003051757812" text="Behandling" />
+                    <TableColumn fx:id="employeeCol" prefWidth="104.800048828125" text="Frisør" />
+                    <TableColumn fx:id="noteCol" prefWidth="243.199951171875" text="Noter" />
+               <TableColumn fx:id="statusCol" prefWidth="62.4000244140625" text="Status" />
                 </columns>
             <VBox.margin>
                <Insets left="5.0" />
@@ -91,6 +92,7 @@
            <HBox prefHeight="0.0" prefWidth="182.0" spacing="8.0">
                <Button onAction="#onAddBooking" text="Tilføj" />
                <Button mnemonicParsing="false" onAction="#onUpdateBooking" text="Opdater" />
+            <Button fx:id="redigerbut" mnemonicParsing="false" onAction="#onEditBooking" text="rediger" />
            </HBox>
        </VBox>
    </right>

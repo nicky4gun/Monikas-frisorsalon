@@ -2,12 +2,11 @@ package dk.jannikognicklas.monikasfrisorsalon.repositories;
 
 import dk.jannikognicklas.monikasfrisorsalon.infrastructure.DbConfig;
 import dk.jannikognicklas.monikasfrisorsalon.models.Booking;
+import dk.jannikognicklas.monikasfrisorsalon.models.BookingView;
 import dk.jannikognicklas.monikasfrisorsalon.models.enums.Status;
 
 import java.sql.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,7 +66,7 @@ public class BookingRepository {
         String sql = "SELECT * FROM bookings WHERE id = ?";
         
         try (Connection conn = config.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);) {
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, bookingId);
 
@@ -84,9 +83,22 @@ public class BookingRepository {
         return null;
     }
 
-    public List<Booking> findBookingsByDateAndEmployee(LocalDate date, int employeeId) {
-        List<Booking> bookings = new ArrayList<>();
-        String sql = "SELECT * FROM bookings WHERE date = ? AND employee_id = ? AND status = 'BOOKED' ORDER BY time DESC";
+    public List<BookingView> findBookingsByDateAndEmployee(LocalDate date, int employeeId) {
+        List<BookingView> bookings = new ArrayList<>();
+        String sql = """ 
+                       SELECT b.id, b.date, b.time, b.note, b.status,
+                              c.name AS customer_name,
+                              c.id AS customer_id,
+                              e.id AS employee_id,
+                              ht.id AS hair_treatment_id,
+                              e.name AS employee_name,
+                              ht.hair_treatment AS treatment_name
+                       FROM bookings b 
+                       JOIN customers c on b.customer_id = c.id 
+                       JOIN hair_treatments ht on b.hair_treatment_id = ht.id
+                       JOIN employees e on b.employee_id = e.id
+                       WHERE date = ? AND employee_id = ? AND status = 'BOOKED' ORDER BY time DESC
+                       """;
 
         try (Connection conn = config.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -96,7 +108,7 @@ public class BookingRepository {
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    bookings.add(mapBooking(rs));
+                    bookings.add(mapBookingView(rs));
                 }
             }
 
@@ -108,7 +120,8 @@ public class BookingRepository {
     }
 
     public void updateBooking(Booking booking) {
-        String sql = "UPDATE bookings set date = ?, time = ?, employee_id = ?, customer_id = ?, hair_treatment_id = ?, status = ? WHERE id = ?";
+        String sql = "UPDATE bookings set date = ?, time = ?, employee_id = ?, customer_id = ?, hair_treatment_id = ?, status = ?, note = ? WHERE id = ?";
+
         try (Connection conn = config.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
@@ -118,7 +131,9 @@ public class BookingRepository {
             stmt.setInt(4, booking.getCustomerId());
             stmt.setInt(5, booking.getHairTreatmentId());
             stmt.setString(6, String.valueOf(booking.getStatus()));
-            stmt.setInt(7, booking.getId());
+            stmt.setString(7, booking.getNote());
+            stmt.setInt(8, booking.getId());
+
             stmt.executeUpdate();
 
         } catch (SQLException e) {
@@ -169,6 +184,21 @@ public class BookingRepository {
                 rs.getInt("hair_treatment_id"),
                 Status.valueOf(rs.getString("status")),
                 rs.getString("note")
+        );
+    }
+
+    private BookingView mapBookingView(ResultSet rs) throws SQLException {
+        return new BookingView(
+                rs.getInt("id"),
+                rs.getInt("customer_id"),
+                rs.getInt("hair_treatment_id"),
+                rs.getInt("employee_id"),
+                rs.getTime("time").toLocalTime(),
+                rs.getString("customer_name"),
+                rs.getString("treatment_name"),
+                rs.getString("employee_name"),
+                rs.getString("note"),
+                Status.valueOf(rs.getString("status"))
         );
     }
 }

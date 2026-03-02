@@ -1,6 +1,7 @@
 package dk.jannikognicklas.monikasfrisorsalon.services;
 
 import dk.jannikognicklas.monikasfrisorsalon.models.HairTreatment;
+import dk.jannikognicklas.monikasfrisorsalon.models.enums.Treatment;
 import dk.jannikognicklas.monikasfrisorsalon.repositories.TreatmentRepository;
 
 import java.util.List;
@@ -15,4 +16,6 @@ public class TreatmentService {
     public List<HairTreatment> findAllTreatments() {
         return treatmentRepository.findAllTreatments();
     }
+
+    public HairTreatment findHairTreatmentById(int id) { return treatmentRepository.findAllTreatmensById(id);}
 }
