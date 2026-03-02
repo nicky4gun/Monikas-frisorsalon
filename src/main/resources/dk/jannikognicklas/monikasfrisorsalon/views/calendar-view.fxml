@@ -35,7 +35,7 @@
                 </VBox.margin>
             </Label>
             <DatePicker fx:id="datePicker" onAction="#onDateChanged" />
-            <Label text="Actions">
+            <Label text="Afmeld og Gennemfør">
                 <VBox.margin>
                     <Insets top="20.0" />
                 </VBox.margin>
@@ -80,6 +80,14 @@
            <ComboBox fx:id="employeeBox" prefWidth="150.0" promptText="Vælg frisør" />
            <ComboBox fx:id="customerBox" prefWidth="150.0" promptText="Vælg Kunde" />
            <ComboBox fx:id="treatmentBox" prefWidth="150.0" promptText="Vælg Behandling" />
+           <TextArea fx:id="noteArea" prefHeight="66.0" prefRowCount="2" prefWidth="862.0" promptText="Note" />
+           <HBox prefHeight="0.0" prefWidth="182.0" spacing="8.0">
+            <children>
+                  <Button onAction="#onAddBooking" text="Tilføj" />
+                  <Button mnemonicParsing="false" onAction="#onUpdateBooking" text="Opdater" />
+               <Button fx:id="redigerbut" mnemonicParsing="false" onAction="#onEditBooking" text="rediger" />
+            </children>
+           </HBox>
            <Label text="Kundens information">
               <VBox.margin>
                   <Insets top="20.0" />
@@ -88,12 +96,7 @@
            <TextField fx:id="nameField" promptText="Navn" />
            <TextField fx:id="emailField" promptText="Email" />
            <TextField fx:id="phoneField" promptText="Tlf." />
-           <TextArea fx:id="noteArea" prefHeight="66.0" prefRowCount="2" prefWidth="862.0" promptText="Note" />
-           <HBox prefHeight="0.0" prefWidth="182.0" spacing="8.0">
-               <Button onAction="#onAddBooking" text="Tilføj" />
-               <Button mnemonicParsing="false" onAction="#onUpdateBooking" text="Opdater" />
-            <Button fx:id="redigerbut" mnemonicParsing="false" onAction="#onEditBooking" text="rediger" />
-           </HBox>
+         <Button mnemonicParsing="false" onAction="#onCreateCustomer" text="Opret Kunde" />
        </VBox>
    </right>
 </BorderPane>

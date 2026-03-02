@@ -221,6 +221,9 @@ public class BookingController implements ViewController<BookingService> {
         }
     }
 
+    @FXML
+    protected void onCreateCustomer() {}
+
     private void refreshSelectedDate() {
         LocalDate date = datePicker.getValue();
         bookings.clear();
