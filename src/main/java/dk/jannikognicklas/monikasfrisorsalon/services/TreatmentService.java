@@ -1,7 +1,6 @@
 package dk.jannikognicklas.monikasfrisorsalon.services;
 
 import dk.jannikognicklas.monikasfrisorsalon.models.HairTreatment;
-import dk.jannikognicklas.monikasfrisorsalon.models.enums.Treatment;
 import dk.jannikognicklas.monikasfrisorsalon.repositories.TreatmentRepository;
 
 import java.util.List;

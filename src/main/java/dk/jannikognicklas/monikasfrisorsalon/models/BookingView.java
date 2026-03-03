@@ -12,12 +12,14 @@ public class BookingView {
     private int employeeId;
     private LocalTime time;
     private String customerName;
+    private String customerEmail;
+    private int phoneNumber;
     private Treatment treatment;
     private String employeeName;
     private String note;
     private Status status;
 
-    public BookingView(int id, int customerId, int treatmentId, int employeeId, LocalTime time, String customerName, String treatment, String employeeName, String note, Status status) {
+    public BookingView(int id, int customerId, int treatmentId, int employeeId, LocalTime time, String customerName, String customerEmail, int phoneNumber, String treatment, String employeeName, String note, Status status) {
         this.id = id;
         this.customerId = customerId;
         this.treatmentId = treatmentId;
@@ -26,6 +28,8 @@ public class BookingView {
         this.customerName = customerName;
         this.treatment = Treatment.valueOf(treatment);
         this.employeeName = employeeName;
+        this.customerEmail = customerEmail;
+        this.phoneNumber = phoneNumber;
         this.note = note;
         this.status = status;
     }
@@ -54,6 +58,10 @@ public class BookingView {
         return customerName;
     }
 
+    public String getCustomerEmail() {return customerEmail;}
+
+    public int getPhoneNumber() {return phoneNumber;}
+
     public Treatment getTreatment() {
         return treatment;
     }
@@ -69,4 +77,7 @@ public class BookingView {
     public Status getStatus() {
         return status;
     }
+
+
+
 }

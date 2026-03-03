@@ -54,8 +54,7 @@ public class Customer {
 
     @Override
     public String toString() {
-        return name + " " + email;
-
+        return name + ": " + email;
     }
 }
 

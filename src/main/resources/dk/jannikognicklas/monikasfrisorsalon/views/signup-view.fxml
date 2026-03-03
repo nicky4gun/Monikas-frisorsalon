@@ -10,7 +10,7 @@
 <?import javafx.scene.text.Font?>
 
 <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="236.0" prefWidth="297.0" spacing="8.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.jannikognicklas.monikasfrisorsalon.controllers.SignUpController">
-    <Label contentDisplay="CENTER" text="Sign Up">
+    <Label contentDisplay="CENTER" text="Opret Medarbejder">
         <font>
             <Font name="System Bold" size="20.0" />
         </font>

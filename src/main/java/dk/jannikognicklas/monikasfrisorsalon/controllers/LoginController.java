@@ -43,13 +43,13 @@ public class LoginController implements ViewController<EmployeeService> {
             Employee loggedInEmployee = employeeService.checkLogin(username, password);
 
             if (loggedInEmployee == null) {
-                showLoginMessage("Wrong username or password", Color.RED);
+                showLoginMessage("Forkert brugernavn eller adgangskode", Color.RED);
             } else {
                 viewSwitcher.goToDashboard(loggedInEmployee);
             }
 
         } catch (IllegalArgumentException e) {
-            showLoginMessage("Invalid: " + e.getMessage(), Color.BLACK);
+            showLoginMessage("Ugyldigt: " + e.getMessage(), Color.BLACK);
         }
     }
 

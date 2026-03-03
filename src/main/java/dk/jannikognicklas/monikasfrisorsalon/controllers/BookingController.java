@@ -15,6 +15,7 @@ import javafx.scene.control.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 
 public class BookingController implements ViewController<BookingService> {
     private ViewSwitcher viewSwitcher;
@@ -31,6 +32,7 @@ public class BookingController implements ViewController<BookingService> {
     @FXML private TextField nameField;
     @FXML private TextField emailField;
     @FXML private TextField phoneField;
+    @FXML private TextField searchField;
     @FXML private TextArea noteArea;
 
     @FXML private ComboBox<Employee> employeeBox;
@@ -40,6 +42,8 @@ public class BookingController implements ViewController<BookingService> {
     @FXML private TableView<BookingView> bookingView;
     @FXML private TableColumn<BookingView, String> timeCol;
     @FXML private TableColumn<BookingView, String> nameCol;
+    @FXML private TableColumn<BookingView, String> emailCol;
+    @FXML private TableColumn<BookingView, String> phoneCol;
     @FXML private TableColumn<BookingView, String> employeeCol;
     @FXML private TableColumn<BookingView, String> hairTreatmentCol;
     @FXML private TableColumn<BookingView, String> noteCol;
@@ -48,6 +52,7 @@ public class BookingController implements ViewController<BookingService> {
     private ObservableList<BookingView> bookings = FXCollections.observableArrayList();
     private ObservableList<Employee> employees;
     private ObservableList<HairTreatment> treatments;
+    private ObservableList<Customer> customers;
 
     @Override
     public void setService(BookingService bookingService) {
@@ -73,6 +78,7 @@ public class BookingController implements ViewController<BookingService> {
 
     public void setLoggedInEmployee(Employee employee) {
         this.loggedInEmployee = employee;
+        employeeBox.getSelectionModel().select(loggedInEmployee);
         refreshSelectedDate();
     }
 
@@ -83,12 +89,16 @@ public class BookingController implements ViewController<BookingService> {
 
     public void initialize() {
         datePicker.setValue(LocalDate.now());
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+             bookingView.setItems( bookingService.searchBookings(newValue));});
     }
 
     // ------ Init helpers ------
     private void initBookingTable() {
         timeCol.setCellValueFactory(cell -> new javafx.beans.property.SimpleStringProperty(cell.getValue().getTime().toString()));
         nameCol.setCellValueFactory(cell -> new javafx.beans.property.SimpleStringProperty(cell.getValue().getCustomerName()));
+        emailCol.setCellValueFactory(cell -> new javafx.beans.property.SimpleStringProperty(cell.getValue().getCustomerEmail()));
+        phoneCol.setCellValueFactory(cell -> new javafx.beans.property.SimpleStringProperty(String.valueOf(cell.getValue().getPhoneNumber())));
         hairTreatmentCol.setCellValueFactory(cell -> new javafx.beans.property.SimpleStringProperty(cell.getValue().getTreatment().toString()));
         employeeCol.setCellValueFactory(cell -> new javafx.beans.property.SimpleStringProperty(cell.getValue().getEmployeeName()));
         noteCol.setCellValueFactory(cell -> new javafx.beans.property.SimpleStringProperty(cell.getValue().getNote()));
@@ -108,7 +118,7 @@ public class BookingController implements ViewController<BookingService> {
     }
 
     private void initCustomerList() {
-        ObservableList<Customer> customers = FXCollections.observableArrayList(customersService.findAllCustomers());
+        customers = FXCollections.observableArrayList(customersService.findAllCustomers());
 
 
         if (customerBox != null) {
@@ -132,14 +142,31 @@ public class BookingController implements ViewController<BookingService> {
     @FXML
     protected void onAddBooking() {
         LocalDate date = datePicker.getValue();
-        LocalTime time = LocalTime.parse(timeField.getText().trim());
+        LocalTime time;
+
+        try {
+            time = LocalTime.parse(timeField.getText().trim());
+        } catch (DateTimeParseException e) {
+            showAlert("Fejl", "Indtast tid i formatet HH:mm, f.eks. 16:00", Alert.AlertType.ERROR);
+            return;
+        }
 
         Employee selectedEmployee = employeeBox.getSelectionModel().getSelectedItem();
         Customer selectedCustomer = customerBox.getSelectionModel().getSelectedItem();
         HairTreatment selectedTreatment = treatmentBox.getSelectionModel().getSelectedItem();
+
+        if (selectedCustomer == null || selectedTreatment == null || selectedEmployee == null) {
+            showAlert("Fejl", "Vælg venligst frisør, kunde og behandling", Alert.AlertType.ERROR);
+        }
+
         String note = noteArea.getText().trim();
 
-        bookingService.addBooking(date, time, selectedEmployee.getId(), selectedCustomer.getId(), selectedTreatment.getId(), Status.BOOKED, note);
+        try {
+            bookingService.addBooking(date, time, selectedEmployee.getId(), selectedCustomer.getId(), selectedTreatment.getId(), Status.BOOKED, note);
+            showAlert("Success", "Booking blev tilføjet", Alert.AlertType.INFORMATION);
+        } catch (IllegalArgumentException e) {
+            showAlert("Fejl", e.getMessage(), Alert.AlertType.ERROR);
+        }
 
         refreshSelectedDate();
     }
@@ -150,28 +177,24 @@ public class BookingController implements ViewController<BookingService> {
     }
 
     @FXML
-    protected void onCancelSelected() {
-        BookingView selected = bookingView.getSelectionModel().getSelectedItem();
-        if (selected == null) return;
-
-        bookings.remove(selected);
-        bookingService.cancelBooking(selected.getId());
-
+    private void onEmployeeChanged() {
         refreshSelectedDate();
     }
 
     @FXML
-    protected void onCompleteSelected() {
+    protected void onCancelSelected() {
         BookingView selected = bookingView.getSelectionModel().getSelectedItem();
+        if (selected == null) return;
 
         try {
-            if (selected != null) {
-                bookings.remove(selected);
-                bookingService.completeBooking(selected.getId());
-            }
+            bookings.remove(selected);
+            bookingService.cancelBooking(selected.getId());
+            showAlert("Success", "Booking blev afmeldt", Alert.AlertType.INFORMATION);
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
+            showAlert("Fejl", e.getMessage(), Alert.AlertType.ERROR);
         }
+
+        refreshSelectedDate();
     }
 
     @FXML
@@ -182,23 +205,22 @@ public class BookingController implements ViewController<BookingService> {
     @FXML
     protected void onUpdateBooking() {
         BookingView selected = bookingView.getSelectionModel().getSelectedItem();
-
         if (selected == null) return;
 
+        LocalDate date = datePicker.getValue();
+        LocalTime time = LocalTime.parse(timeField.getText().trim());
+        Employee employee = employeeBox.getSelectionModel().getSelectedItem();
+        HairTreatment treatment = treatmentBox.getSelectionModel().getSelectedItem();
+        Customer customer = customerBox.getSelectionModel().getSelectedItem();
+        Status status = selected.getStatus();
+        String note = noteArea.getText();
+
         try {
-            LocalDate date = datePicker.getValue();
-            LocalTime time = LocalTime.parse(timeField.getText().trim());
-            Employee employee = employeeBox.getSelectionModel().getSelectedItem();
-            HairTreatment treatment = treatmentBox.getSelectionModel().getSelectedItem();
-            Customer customer = customerBox.getSelectionModel().getSelectedItem();
-            Status status = selected.getStatus();
-            String note = noteArea.getText();
-
             bookingService.updateBooking(selected.getId(), date, time, employee.getId(), customer.getId(), treatment.getId(), status, note);
+            showAlert("Success", "Booking blev opdateret", Alert.AlertType.INFORMATION);
             refreshSelectedDate();
-
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
+            showAlert("Error", e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
@@ -215,6 +237,34 @@ public class BookingController implements ViewController<BookingService> {
         }
     }
 
+    @FXML
+    protected void onCreateCustomer() {
+        String name = nameField.getText().trim();
+        String email = emailField.getText().trim();
+        int phoneNumber = Integer.parseInt(phoneField.getText().trim());
+
+        boolean existingEmail = customersService.emailExists(email);
+
+        if (existingEmail) {
+            showAlert("Fejl", "Email allerede brugt", Alert.AlertType.ERROR);
+            return;
+        }
+
+        try {
+            Customer customer = customersService.addCustomer(name, email, phoneNumber);
+            customers.add(customer);
+            showAlert("Sucess", "Kunde blev oprettet", Alert.AlertType.INFORMATION);
+        } catch (IllegalArgumentException e) {
+            showAlert("Error", e.getMessage(), Alert.AlertType.ERROR);
+        }
+
+        nameField.clear();
+        emailField.clear();
+        phoneField.clear();
+
+        refreshSelectedDate();
+    }
+
     // ------ Helpers ------
     private void refreshSelectedDate() {
         LocalDate date = datePicker.getValue();
@@ -222,6 +272,23 @@ public class BookingController implements ViewController<BookingService> {
 
         if (date == null) return;
 
-        bookings.addAll(bookingService.getBookingsByDateAndEmployee(date, loggedInEmployee.getId()));
+        Employee selected = employeeBox.getSelectionModel().getSelectedItem();
+        Employee employee;
+
+        if (selected != null) {
+            employee = selected;
+        } else {
+            employee = loggedInEmployee;
+        }
+
+        bookings.addAll(bookingService.getBookingsByDateAndEmployee(date, employee.getId()));
+    }
+
+    private void showAlert(String title, String message, Alert.AlertType type) {
+        Alert alert  = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

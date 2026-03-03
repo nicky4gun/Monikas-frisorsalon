@@ -1,7 +1,6 @@
 package dk.jannikognicklas.monikasfrisorsalon.repositories;
 
 import dk.jannikognicklas.monikasfrisorsalon.infrastructure.DbConfig;
-import dk.jannikognicklas.monikasfrisorsalon.models.Employee;
 import dk.jannikognicklas.monikasfrisorsalon.models.HairTreatment;
 import dk.jannikognicklas.monikasfrisorsalon.models.enums.Treatment;
 
@@ -32,7 +31,7 @@ public class TreatmentRepository {
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException("An error occurred trying to get all treatments" + e);
+            throw new RuntimeException("An error occurred trying to get all treatments", e);
         }
 
         return treatments;

@@ -2,8 +2,10 @@ package dk.jannikognicklas.monikasfrisorsalon.services;
 
 import dk.jannikognicklas.monikasfrisorsalon.models.Booking;
 import dk.jannikognicklas.monikasfrisorsalon.models.BookingView;
+import dk.jannikognicklas.monikasfrisorsalon.models.Customer;
 import dk.jannikognicklas.monikasfrisorsalon.models.enums.Status;
 import dk.jannikognicklas.monikasfrisorsalon.repositories.BookingRepository;
+import javafx.collections.ObservableList;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -21,9 +23,9 @@ public class BookingService {
         bookingRepository.addBooking(booking);
     }
 
-    public List<Booking> findAllBookings() {
-        return bookingRepository.findAllBookings();
-    }
+   // public List<Booking> findAllBookings() {
+     //   return bookingRepository.findAllBookings();;
+    //}
 
     public Booking findBookingById(int bookingId) {
         return bookingRepository.findBookingById(bookingId);
@@ -37,6 +39,11 @@ public class BookingService {
         Booking bookingToUpdate = new Booking(id, date, time, employeeId, customerId, hairTreatmentId, status, note);
         bookingRepository.updateBooking(bookingToUpdate);
     }
+
+    public ObservableList<BookingView> searchBookings(String keywords){
+        return bookingRepository.customerSearch(keywords);
+    }
+
 
     public void cancelBooking(int bookingId) {
         boolean deleted = bookingRepository.cancelBooking(bookingId);

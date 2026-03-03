@@ -3,7 +3,10 @@ package dk.jannikognicklas.monikasfrisorsalon.repositories;
 import dk.jannikognicklas.monikasfrisorsalon.infrastructure.DbConfig;
 import dk.jannikognicklas.monikasfrisorsalon.models.Booking;
 import dk.jannikognicklas.monikasfrisorsalon.models.BookingView;
+import dk.jannikognicklas.monikasfrisorsalon.models.Customer;
 import dk.jannikognicklas.monikasfrisorsalon.models.enums.Status;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -50,7 +53,7 @@ public class BookingRepository {
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException("An error occurred trying to find Booking by employee id " + e);
+            throw new RuntimeException("An error occurred trying to find all Bookings", e);
         }
 
         return bookings;
@@ -71,7 +74,7 @@ public class BookingRepository {
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException("An error occurred trying to find booking by id" + e);
+            throw new RuntimeException("An error occurred trying to find booking by id", e);
         }
 
         return null;
@@ -81,11 +84,13 @@ public class BookingRepository {
         List<BookingView> bookings = new ArrayList<>();
         String sql = """ 
                        SELECT b.id, b.date, b.time, b.note, b.status,
-                              c.name AS customer_name,
                               c.id AS customer_id,
+                              c.name AS customer_name,
+                              c.email AS customer_email,
+                              c.phone AS phone_number,
                               e.id AS employee_id,
-                              ht.id AS hair_treatment_id,
                               e.name AS employee_name,
+                              ht.id AS hair_treatment_id,
                               ht.hair_treatment AS treatment_name
                        FROM bookings b
                        JOIN customers c on b.customer_id = c.id
@@ -107,7 +112,7 @@ public class BookingRepository {
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException("An error occurred trying to find Booking by employee id " + e);
+            throw new RuntimeException("An error occurred trying to find Booking by employee id ", e);
         }
 
         return bookings;
@@ -125,7 +130,7 @@ public class BookingRepository {
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            throw new RuntimeException("An error occurred while trying to insert a booking", e);
+            throw new RuntimeException("An error occurred while trying to update a booking", e);
         }
     }
 
@@ -142,7 +147,7 @@ public class BookingRepository {
             return rows > 0;
 
         } catch (SQLException e) {
-            throw new RuntimeException("An error occurred trying to cancel booking" + e);
+            throw new RuntimeException("An error occurred trying to cancel booking", e);
         }
     }
 
@@ -158,8 +163,48 @@ public class BookingRepository {
             return rows > 0;
 
         } catch (SQLException e) {
-            throw new RuntimeException("An error occurred trying to complete Booking" + e);
+            throw new RuntimeException("An error occurred trying to complete Booking", e);
         }
+    }
+
+    public ObservableList<BookingView> customerSearch(String keyword) {
+
+        ObservableList<BookingView> result = FXCollections.observableArrayList();
+        String sql = """ 
+                       SELECT b.id, b.date, b.time, b.note, b.status,
+                              c.id AS customer_id,
+                              c.name AS customer_name,
+                              c.email AS customer_email,
+                              c.phone AS phone_number,
+                              e.id AS employee_id,
+                              e.name AS employee_name,
+                              ht.id AS hair_treatment_id,
+                              ht.hair_treatment AS treatment_name
+                       FROM bookings b
+                       JOIN customers c on b.customer_id = c.id
+                       JOIN hair_treatments ht on b.hair_treatment_id = ht.id
+                       JOIN employees e on b.employee_id = e.id
+                       WHERE (c.name like ?) AND b.status NOT IN ('COMPLETED', 'CANCELLED') 
+                       """;
+
+        try (Connection conn = config.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            String pattern = "%" + keyword + "%";
+            stmt.setString(1, pattern);
+
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                result.addAll(mapBookingView(rs));
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return result;
     }
 
     // ------ Helpers ------
@@ -186,6 +231,7 @@ public class BookingRepository {
         );
     }
 
+
     private BookingView mapBookingView(ResultSet rs) throws SQLException {
         return new BookingView(
                 rs.getInt("id"),
@@ -194,6 +240,8 @@ public class BookingRepository {
                 rs.getInt("employee_id"),
                 rs.getTime("time").toLocalTime(),
                 rs.getString("customer_name"),
+                rs.getString("customer_email"),
+                rs.getInt("phone_number"),
                 rs.getString("treatment_name"),
                 rs.getString("employee_name"),
                 rs.getString("note"),

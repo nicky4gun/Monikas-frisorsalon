@@ -45,7 +45,7 @@ public class SignUpController implements ViewController<EmployeeService> {
             boolean existingUser = employeeService.usernameExists(username);
 
             if (existingUser) {
-                showSignUpMessage("Username is taken, please try another", Color.RED);
+                showSignUpMessage("Brugernavn er taget, prøv et andet", Color.RED);
                 return;
             }
 

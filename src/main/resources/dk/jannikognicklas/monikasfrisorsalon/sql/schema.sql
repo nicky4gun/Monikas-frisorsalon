@@ -36,3 +36,15 @@ CREATE TABLE bookings (
     FOREIGN KEY (customer_id)       REFERENCES customers(id),
     FOREIGN KEY (hair_treatment_id) REFERENCES hair_treatments(id)
 );
+
+-- Event Schedule (Delete after 5 years)
+SET GLOBAL event_scheduler = ON;
+
+CREATE EVENT IF NOT EXISTS `Delete_data_after_5_years`
+ON SCHEDULE
+	EVERY 1 MONTH
+	STARTS CURRENT_TIMESTAMP
+COMMENT 'Clean up GDPR data'
+DO
+    DELETE FROM bookings
+    WHERE date < DATE_SUB(NOW(), INTERVAL 5 YEAR)
