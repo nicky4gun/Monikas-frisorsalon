@@ -12,7 +12,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -26,29 +25,29 @@ public class BookingController implements ViewController<BookingService> {
 
     private Employee loggedInEmployee;
 
-    @FXML DatePicker datePicker;
+    @FXML private DatePicker datePicker;
 
-    @FXML TextField timeField;
-    @FXML TextField nameField;
-    @FXML TextField emailField;
-    @FXML TextField phoneField;
-    @FXML TextArea noteArea;
+    @FXML private TextField timeField;
+    @FXML private TextField nameField;
+    @FXML private TextField emailField;
+    @FXML private TextField phoneField;
+    @FXML private TextArea noteArea;
 
-    @FXML ComboBox<Employee> employeeBox;
-    @FXML ComboBox<HairTreatment> treatmentBox;
-    @FXML ComboBox<Customer> customerBox;
+    @FXML private ComboBox<Employee> employeeBox;
+    @FXML private ComboBox<HairTreatment> treatmentBox;
+    @FXML private ComboBox<Customer> customerBox;
 
-    @FXML TableView<BookingView> bookingView;
-    @FXML TableColumn<BookingView, String> timeCol;
-    @FXML TableColumn<BookingView, String> nameCol;
-    @FXML TableColumn<BookingView, String> employeeCol;
-    @FXML TableColumn<BookingView, String> hairTreatmentCol;
-    @FXML TableColumn<BookingView, String> noteCol;
-    @FXML TableColumn<BookingView, String> statusCol;
+    @FXML private TableView<BookingView> bookingView;
+    @FXML private TableColumn<BookingView, String> timeCol;
+    @FXML private TableColumn<BookingView, String> nameCol;
+    @FXML private TableColumn<BookingView, String> employeeCol;
+    @FXML private TableColumn<BookingView, String> hairTreatmentCol;
+    @FXML private TableColumn<BookingView, String> noteCol;
+    @FXML private TableColumn<BookingView, String> statusCol;
 
-    ObservableList<BookingView> bookings;
-    ObservableList<Employee> employees;
-    ObservableList<HairTreatment> treatments;
+    private ObservableList<BookingView> bookings = FXCollections.observableArrayList();
+    private ObservableList<Employee> employees;
+    private ObservableList<HairTreatment> treatments;
 
     @Override
     public void setService(BookingService bookingService) {
@@ -82,9 +81,12 @@ public class BookingController implements ViewController<BookingService> {
         this.viewSwitcher = viewSwitcher;
     }
 
-    private void initBookingTable() {
-        bookings = FXCollections.observableArrayList();
+    public void initialize() {
+        datePicker.setValue(LocalDate.now());
+    }
 
+    // ------ Init helpers ------
+    private void initBookingTable() {
         timeCol.setCellValueFactory(cell -> new javafx.beans.property.SimpleStringProperty(cell.getValue().getTime().toString()));
         nameCol.setCellValueFactory(cell -> new javafx.beans.property.SimpleStringProperty(cell.getValue().getCustomerName()));
         hairTreatmentCol.setCellValueFactory(cell -> new javafx.beans.property.SimpleStringProperty(cell.getValue().getTreatment().toString()));
@@ -126,21 +128,18 @@ public class BookingController implements ViewController<BookingService> {
         }
     }
 
-    public void initialize() {
-        datePicker.setValue(LocalDate.now());
-    }
-
+    // ------ Event Handlers ------
     @FXML
     protected void onAddBooking() {
         LocalDate date = datePicker.getValue();
         LocalTime time = LocalTime.parse(timeField.getText().trim());
 
-        Employee selectededEmployee = employeeBox.getSelectionModel().getSelectedItem();
+        Employee selectedEmployee = employeeBox.getSelectionModel().getSelectedItem();
         Customer selectedCustomer = customerBox.getSelectionModel().getSelectedItem();
         HairTreatment selectedTreatment = treatmentBox.getSelectionModel().getSelectedItem();
         String note = noteArea.getText().trim();
 
-        bookingService.addBooking(date, time, selectededEmployee.getId(), selectedCustomer.getId(), selectedTreatment.getId(), Status.BOOKED, note);
+        bookingService.addBooking(date, time, selectedEmployee.getId(), selectedCustomer.getId(), selectedTreatment.getId(), Status.BOOKED, note);
 
         refreshSelectedDate();
     }
@@ -153,15 +152,10 @@ public class BookingController implements ViewController<BookingService> {
     @FXML
     protected void onCancelSelected() {
         BookingView selected = bookingView.getSelectionModel().getSelectedItem();
+        if (selected == null) return;
 
-        try {
-            if (selected != null) {
-                bookings.remove(selected);
-                bookingService.cancelBooking(selected.getId());
-            }
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        }
+        bookings.remove(selected);
+        bookingService.cancelBooking(selected.getId());
 
         refreshSelectedDate();
     }
@@ -221,6 +215,7 @@ public class BookingController implements ViewController<BookingService> {
         }
     }
 
+    // ------ Helpers ------
     private void refreshSelectedDate() {
         LocalDate date = datePicker.getValue();
         bookings.clear();

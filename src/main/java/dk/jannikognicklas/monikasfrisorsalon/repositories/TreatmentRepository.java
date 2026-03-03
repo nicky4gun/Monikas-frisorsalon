@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TreatmentRepository {
-    private DbConfig config;
+    private final DbConfig config;
 
     public TreatmentRepository(DbConfig config) {
         this.config = config;
@@ -28,21 +28,16 @@ public class TreatmentRepository {
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                int id = rs.getInt("id");
-                Treatment hairTreatment = Treatment.valueOf(rs.getString("hair_treatment"));
-                int duration = rs.getInt("duration");
-                double price = rs.getBigDecimal("price").doubleValue();
-
-                treatments.add(new HairTreatment(id, hairTreatment, duration, price));
+                treatments.add(mapTreatment(rs));
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException("An error occurred trying to find Booking by employee id " + e);
+            throw new RuntimeException("An error occurred trying to get all treatments" + e);
         }
 
         return treatments;
     }
-    public HairTreatment findAllTreatmensById (int treatmentId) {
+    public HairTreatment findTreatmentById(int treatmentId) {
         String sql = "SELECT * FROM hair_treatments WHERE id = ?";
 
         try (Connection conn = config.getConnection();
@@ -56,7 +51,7 @@ public class TreatmentRepository {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("cant find Treatmens Id");
+            throw new RuntimeException("Error getting getting treatment with id: " + treatmentId, e);
         }
 
         return null;

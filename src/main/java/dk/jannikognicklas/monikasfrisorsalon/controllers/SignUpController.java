@@ -14,11 +14,11 @@ public class SignUpController implements ViewController<EmployeeService> {
     private ViewSwitcher viewSwitcher;
     private EmployeeService employeeService;
 
-    @FXML TextField nameSignUpField;
-    @FXML TextField usernameField;
-    @FXML PasswordField passwordField;
+    @FXML private TextField nameSignUpField;
+    @FXML private TextField usernameField;
+    @FXML private PasswordField passwordField;
 
-    @FXML Label loginMessageLabel;
+    @FXML private Label loginMessageLabel;
 
     @Override
     public void setService(EmployeeService employeeService) {
@@ -32,19 +32,25 @@ public class SignUpController implements ViewController<EmployeeService> {
 
     @FXML
     protected void onSignUpButtonPress() {
-        String name = nameSignUpField.getText();
-        String username = usernameField.getText();
-        String password = passwordField.getText();
+        String name = nameSignUpField.getText().trim();
+        String username = usernameField.getText().trim();
+        String password = passwordField.getText().trim();
+
+        if (name.isEmpty() || username.isEmpty() || password.isEmpty()) {
+            showSignUpMessage("Angiv venligst både navn, brugernavn & adgangskode", Color.RED);
+            return;
+        }
 
         try {
             boolean existingUser = employeeService.usernameExists(username);
 
             if (existingUser) {
                 showSignUpMessage("Username is taken, please try another", Color.RED);
-            } else {
-                Employee newEmployee = employeeService.addEmployee(name, username, password);
-                viewSwitcher.goToDashboard(newEmployee);
+                return;
             }
+
+            Employee newEmployee = employeeService.addEmployee(name, username, password);
+            viewSwitcher.goToDashboard(newEmployee);
 
         } catch (IllegalArgumentException e) {
             showSignUpMessage("Invalid: " + e.getMessage(), Color.RED);

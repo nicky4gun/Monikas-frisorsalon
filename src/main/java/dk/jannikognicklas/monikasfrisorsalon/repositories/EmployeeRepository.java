@@ -71,7 +71,7 @@ public class EmployeeRepository {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("An error occurred during login for username: " + username, e);
         }
 
         return null;
@@ -90,12 +90,13 @@ public class EmployeeRepository {
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException("cant find employees"+ e.getMessage());
+            throw new RuntimeException("Error getting all employees", e);
         }
 
         return  employees;
     }
-    public Employee findEmployeesById(int employeeId) {
+
+    public Employee findEmployeeById(int employeeId) {
         String sql = "SELECT * FROM employees WHERE id = ?";
 
         try (Connection conn = config.getConnection();
@@ -109,7 +110,7 @@ public class EmployeeRepository {
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException("cant find Employee Id")  ;
+            throw new RuntimeException("Error getting employee by id: " + employeeId, e)  ;
         }
 
         return null;

@@ -14,10 +14,10 @@ public class LoginController implements ViewController<EmployeeService> {
     private ViewSwitcher viewSwitcher;
     private EmployeeService employeeService;
 
-    @FXML TextField usernameField;
-    @FXML PasswordField passwordField;
+    @FXML private TextField usernameField;
+    @FXML private PasswordField passwordField;
 
-    @FXML Label loginMessageLabel;
+    @FXML private Label loginMessageLabel;
 
     @Override
     public void setService(EmployeeService service) {
@@ -31,8 +31,13 @@ public class LoginController implements ViewController<EmployeeService> {
 
     @FXML
     protected void onLoginButtonPress() {
-        String username = usernameField.getText();
-        String password = passwordField.getText();
+        String username = usernameField.getText().trim();
+        String password = passwordField.getText().trim();
+
+        if (username.isEmpty() || password.isEmpty()) {
+            showLoginMessage("Angiv venligst både brugernavn & adgangskode", Color.RED);
+            return;
+        }
 
         try {
             Employee loggedInEmployee = employeeService.checkLogin(username, password);

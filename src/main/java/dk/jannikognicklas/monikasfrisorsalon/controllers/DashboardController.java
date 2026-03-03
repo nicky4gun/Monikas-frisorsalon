@@ -12,7 +12,7 @@ public class DashboardController implements ViewController<BookingService> {
     private BookingService bookingService;
     private Employee loggedInEmployee;
 
-    @FXML Label welcomeLabel;
+    @FXML private Label welcomeLabel;
 
     @Override
     public void setService(BookingService bookingService) {

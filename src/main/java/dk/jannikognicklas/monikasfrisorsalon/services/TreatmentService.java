@@ -7,7 +7,7 @@ import dk.jannikognicklas.monikasfrisorsalon.repositories.TreatmentRepository;
 import java.util.List;
 
 public class TreatmentService {
-    private TreatmentRepository treatmentRepository;
+    private final TreatmentRepository treatmentRepository;
 
     public TreatmentService(TreatmentRepository treatmentRepository) {
         this.treatmentRepository = treatmentRepository;
@@ -17,5 +17,5 @@ public class TreatmentService {
         return treatmentRepository.findAllTreatments();
     }
 
-    public HairTreatment findHairTreatmentById(int id) { return treatmentRepository.findAllTreatmensById(id);}
+    public HairTreatment findHairTreatmentById(int id) { return treatmentRepository.findTreatmentById(id);}
 }

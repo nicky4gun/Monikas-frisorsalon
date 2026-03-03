@@ -17,7 +17,7 @@ public class CustomerRepository {
     }
 
     public void addCustomer(Customer customer) {
-        String sql = "INSERT INTO customers (name, email, phone) VALUES (?, ?, ?,)";
+        String sql = "INSERT INTO customers (name, email, phone) VALUES (?, ?, ?)";
         try (Connection conn = config.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
@@ -38,7 +38,7 @@ public class CustomerRepository {
 
     }
 
-    public List<Customer> findAllCustomer() {
+    public List<Customer> findAllCustomers() {
         List<Customer> customers = new ArrayList<>();
         String sql = "SELECT * FROM customers";
 
@@ -47,16 +47,11 @@ public class CustomerRepository {
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                int id = rs.getInt("id" );
-                String name = rs.getString("name" );
-                String email = rs.getString("email");
-                int phone = rs.getInt("phone");
-
-                customers.add(new Customer(id, name, email, phone));
+                customers.add(mapCustomer(rs));
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException("cant find customers"+ e.getMessage());
+            throw new RuntimeException("Cant find customers"+ e.getMessage());
         }
 
         return customers;
@@ -83,7 +78,7 @@ public class CustomerRepository {
         return null;
     }
 
-    public void UpdateCustomer(Customer customer) {
+    public void updateCustomer(Customer customer) {
         String sql = "UPDATE customers set name = ?,  email = ?, phone = ? WHERE id = ? ";
         try (Connection conn = config.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -92,6 +87,7 @@ public class CustomerRepository {
             stmt.setString(2, customer.getEmail());
             stmt.setInt(3, customer.getPhoneNumber());
             stmt.setInt(4, customer.getId());
+            stmt.executeUpdate();
 
         }catch (SQLException e) {
             throw new RuntimeException("An error occurred trying to update customer", e);

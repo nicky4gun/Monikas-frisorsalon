@@ -17,7 +17,8 @@ public class EmployeeService {
         if (username == null || username.isBlank()) throw new IllegalArgumentException("Please enter your username");
         if (password == null || password.isBlank()) throw new IllegalArgumentException("Please enter your password");
 
-        return employeeRepository.addEmployee(new Employee(name, username, password));
+        Employee employee = new Employee(name, username, password);
+        return employeeRepository.addEmployee(employee);
     }
 
     public boolean usernameExists(String username) {
@@ -36,6 +37,6 @@ public class EmployeeService {
     }
 
     public Employee findEmployeeById(int id) {
-        return employeeRepository.findEmployeesById(id);
+        return employeeRepository.findEmployeeById(id);
     }
 }

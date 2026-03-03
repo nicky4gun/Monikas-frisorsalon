@@ -19,16 +19,11 @@ public class BookingRepository {
 
     public void addBooking(Booking booking) {
         String sql = "INSERT INTO bookings (date, time, employee_id, customer_id, hair_treatment_id, status, note) VALUES (?, ?, ?, ?, ?, ?,?)";
+
         try (Connection conn = config.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-            stmt.setDate(1, Date.valueOf(booking.getDate()));
-            stmt.setTime(2, Time.valueOf(booking.getTime()));
-            stmt.setInt(3, booking.getEmployeeId());
-            stmt.setInt(4, booking.getCustomerId());
-            stmt.setInt(5, booking.getHairTreatmentId());
-            stmt.setString(6, String.valueOf(booking.getStatus()));
-            stmt.setString(7,booking.getNote());
+            mapBookingParams(stmt, booking);
             stmt.executeUpdate();
 
             try (ResultSet rs = stmt.getGeneratedKeys()) {
@@ -59,7 +54,6 @@ public class BookingRepository {
         }
 
         return bookings;
-
     }
 
     public Booking findBookingById(int bookingId) {
@@ -93,11 +87,11 @@ public class BookingRepository {
                               ht.id AS hair_treatment_id,
                               e.name AS employee_name,
                               ht.hair_treatment AS treatment_name
-                       FROM bookings b 
-                       JOIN customers c on b.customer_id = c.id 
+                       FROM bookings b
+                       JOIN customers c on b.customer_id = c.id
                        JOIN hair_treatments ht on b.hair_treatment_id = ht.id
                        JOIN employees e on b.employee_id = e.id
-                       WHERE date = ? AND employee_id = ? AND status = 'BOOKED' ORDER BY time DESC
+                       WHERE b.date = ? AND b.employee_id = ? AND b.status = 'BOOKED' ORDER BY b.time DESC
                        """;
 
         try (Connection conn = config.getConnection();
@@ -125,13 +119,7 @@ public class BookingRepository {
         try (Connection conn = config.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setDate(1, Date.valueOf(booking.getDate()));
-            stmt.setTime(2, Time.valueOf(booking.getTime()));
-            stmt.setInt(3, booking.getEmployeeId());
-            stmt.setInt(4, booking.getCustomerId());
-            stmt.setInt(5, booking.getHairTreatmentId());
-            stmt.setString(6, String.valueOf(booking.getStatus()));
-            stmt.setString(7, booking.getNote());
+            mapBookingParams(stmt, booking);
             stmt.setInt(8, booking.getId());
 
             stmt.executeUpdate();
@@ -172,6 +160,17 @@ public class BookingRepository {
         } catch (SQLException e) {
             throw new RuntimeException("An error occurred trying to complete Booking" + e);
         }
+    }
+
+    // ------ Helpers ------
+    private void mapBookingParams(PreparedStatement stmt, Booking booking) throws SQLException {
+        stmt.setDate(1, Date.valueOf(booking.getDate()));
+        stmt.setTime(2, Time.valueOf(booking.getTime()));
+        stmt.setInt(3, booking.getEmployeeId());
+        stmt.setInt(4, booking.getCustomerId());
+        stmt.setInt(5, booking.getHairTreatmentId());
+        stmt.setString(6, String.valueOf(booking.getStatus()));
+        stmt.setString(7,booking.getNote());
     }
 
     private Booking mapBooking(ResultSet rs) throws SQLException {

@@ -16,8 +16,9 @@ public class BookingService {
         this.bookingRepository = bookingRepository;
     }
 
-    public void addBooking(LocalDate date, LocalTime time, int employeeId, int customerId, int hairTreatmentId, Status status,String note) {
-        bookingRepository.addBooking(new Booking( date, time,  employeeId,  customerId,  hairTreatmentId, status,note));
+    public void addBooking(LocalDate date, LocalTime time, int employeeId, int customerId, int hairTreatmentId, Status status, String note) {
+        Booking booking = new Booking(date, time, employeeId, customerId, hairTreatmentId, status, note);
+        bookingRepository.addBooking(booking);
     }
 
     public List<Booking> findAllBookings() {
@@ -32,8 +33,9 @@ public class BookingService {
         return bookingRepository.findBookingsByDateAndEmployee(date, employeeId);
     }
 
-    public  void updateBooking(int id, LocalDate date, LocalTime time, int employeeId, int customerId, int hairTreatmentId, Status status,String note) {
-        bookingRepository.updateBooking(new Booking(id, date, time,  employeeId,  customerId,  hairTreatmentId, status,note));
+    public  void updateBooking(int id, LocalDate date, LocalTime time, int employeeId, int customerId, int hairTreatmentId, Status status, String note) {
+        Booking bookingToUpdate = new Booking(id, date, time, employeeId, customerId, hairTreatmentId, status, note);
+        bookingRepository.updateBooking(bookingToUpdate);
     }
 
     public void cancelBooking(int bookingId) {
