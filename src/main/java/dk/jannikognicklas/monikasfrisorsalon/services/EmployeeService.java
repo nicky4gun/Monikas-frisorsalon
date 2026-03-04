@@ -37,6 +37,16 @@ public class EmployeeService {
     }
 
     public Employee findEmployeeById(int id) {
-        return employeeRepository.findEmployeeById(id);
+        if (id <= 0) {
+            throw new IllegalArgumentException("Ugyldigt medabejder id");
+        }
+
+        Employee employee = employeeRepository.findEmployeeById(id);
+
+        if (employee == null) {
+            throw new IllegalArgumentException("Ingen medarbejder fundet");
+        }
+
+        return employee;
     }
 }

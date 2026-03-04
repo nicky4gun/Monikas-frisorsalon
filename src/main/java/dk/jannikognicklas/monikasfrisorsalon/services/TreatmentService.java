@@ -16,5 +16,17 @@ public class TreatmentService {
         return treatmentRepository.findAllTreatments();
     }
 
-    public HairTreatment findHairTreatmentById(int id) { return treatmentRepository.findTreatmentById(id);}
+    public HairTreatment findHairTreatmentById(int id) {
+        if (id <= 0) {
+            throw new IllegalArgumentException("Ugyldigt behandlings id");
+        }
+
+        HairTreatment treatment = treatmentRepository.findTreatmentById(id);
+
+        if (treatment == null) {
+            throw new IllegalArgumentException("Ingen behandling fundet");
+        }
+
+        return treatment;
+    }
 }

@@ -27,6 +27,7 @@ public class BookingController implements ViewController<BookingService> {
     private Employee loggedInEmployee;
 
     @FXML private DatePicker datePicker;
+    @FXML private Label welcomeLabel;
 
     @FXML private TextField timeField;
     @FXML private TextField nameField;
@@ -79,6 +80,7 @@ public class BookingController implements ViewController<BookingService> {
     public void setLoggedInEmployee(Employee employee) {
         this.loggedInEmployee = employee;
         employeeBox.getSelectionModel().select(loggedInEmployee);
+        welcomeLabel.setText("Velkommen " + loggedInEmployee.getName() + "!");
         refreshSelectedDate();
     }
 
@@ -89,8 +91,9 @@ public class BookingController implements ViewController<BookingService> {
 
     public void initialize() {
         datePicker.setValue(LocalDate.now());
+
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
-             bookingView.setItems( bookingService.searchBookings(newValue));});
+             bookingView.setItems(bookingService.searchBookings(newValue));});
     }
 
     // ------ Init helpers ------
@@ -198,8 +201,8 @@ public class BookingController implements ViewController<BookingService> {
     }
 
     @FXML
-    protected void onGoBack() {
-        viewSwitcher.goToDashboard(loggedInEmployee);
+    protected void onLogoutButtonPress() {
+        viewSwitcher.goToLogin();
     }
 
     @FXML

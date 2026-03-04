@@ -168,8 +168,8 @@ public class BookingRepository {
     }
 
     public ObservableList<BookingView> customerSearch(String keyword) {
-
         ObservableList<BookingView> result = FXCollections.observableArrayList();
+
         String sql = """ 
                        SELECT b.id, b.date, b.time, b.note, b.status,
                               c.id AS customer_id,
@@ -194,10 +194,10 @@ public class BookingRepository {
             stmt.setString(1, pattern);
 
 
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                result.addAll(mapBookingView(rs));
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    result.add(mapBookingView(rs));
+                }
             }
 
         } catch (Exception e) {
@@ -230,7 +230,6 @@ public class BookingRepository {
                 rs.getString("note")
         );
     }
-
 
     private BookingView mapBookingView(ResultSet rs) throws SQLException {
         return new BookingView(

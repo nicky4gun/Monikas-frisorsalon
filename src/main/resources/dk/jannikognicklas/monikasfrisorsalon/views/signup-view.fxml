@@ -6,6 +6,7 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -20,6 +21,8 @@
     <PasswordField fx:id="passwordField" promptText="Password" />
     <HBox alignment="TOP_CENTER" prefHeight="0.0" prefWidth="298.0" spacing="8.0">
         <Button mnemonicParsing="false" onAction="#onSignUpButtonPress" text="Sign Up" />
+      <Region prefHeight="26.0" prefWidth="24.0" />
+      <Button mnemonicParsing="false" onAction="#onGoBackButtonPress" text="go back" />
         <VBox.margin>
             <Insets top="10.0" />
         </VBox.margin>

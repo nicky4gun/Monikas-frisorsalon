@@ -45,7 +45,7 @@ public class LoginController implements ViewController<EmployeeService> {
             if (loggedInEmployee == null) {
                 showLoginMessage("Forkert brugernavn eller adgangskode", Color.RED);
             } else {
-                viewSwitcher.goToDashboard(loggedInEmployee);
+                viewSwitcher.goToBooking(loggedInEmployee);
             }
 
         } catch (IllegalArgumentException e) {

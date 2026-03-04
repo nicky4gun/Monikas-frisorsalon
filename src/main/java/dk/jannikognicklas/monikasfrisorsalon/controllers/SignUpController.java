@@ -50,11 +50,16 @@ public class SignUpController implements ViewController<EmployeeService> {
             }
 
             Employee newEmployee = employeeService.addEmployee(name, username, password);
-            viewSwitcher.goToDashboard(newEmployee);
+            viewSwitcher.goToBooking(newEmployee);
 
         } catch (IllegalArgumentException e) {
             showSignUpMessage("Invalid: " + e.getMessage(), Color.RED);
         }
+    }
+
+    @FXML
+    protected void onGoBackButtonPress() {
+        viewSwitcher.goToLogin();
     }
 
     private void showSignUpMessage(String message, Color color) {
