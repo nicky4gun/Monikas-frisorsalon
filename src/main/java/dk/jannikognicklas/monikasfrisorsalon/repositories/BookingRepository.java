@@ -184,7 +184,7 @@ public class BookingRepository {
                        JOIN customers c on b.customer_id = c.id
                        JOIN hair_treatments ht on b.hair_treatment_id = ht.id
                        JOIN employees e on b.employee_id = e.id
-                       WHERE (c.name like ?) AND b.status NOT IN ('COMPLETED', 'CANCELLED') 
+                       WHERE (c.name like ?)  AND b.status NOT IN ('COMPLETED', 'CANCELLED') 
                        """;
 
         try (Connection conn = config.getConnection();
@@ -192,6 +192,7 @@ public class BookingRepository {
 
             String pattern = "%" + keyword + "%";
             stmt.setString(1, pattern);
+
 
 
             try (ResultSet rs = stmt.executeQuery()) {

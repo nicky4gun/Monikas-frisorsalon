@@ -30,7 +30,7 @@
                </font>
             </Label>
             <Region prefHeight="27.0" prefWidth="138.0" HBox.hgrow="ALWAYS" />
-            <TextField fx:id="searchField" prefHeight="26.0" prefWidth="417.0" promptText="Søg (navn)" />
+            <TextField fx:id="searchField" onAction="#onSearch" prefHeight="26.0" prefWidth="417.0" promptText="Søg (navn)" />
             <Region prefHeight="27.0" prefWidth="194.0" HBox.hgrow="ALWAYS" />
                 <Button mnemonicParsing="false" onAction="#onLogoutButtonPress" prefHeight="26.0" prefWidth="78.0" text="Log ud" />
             </HBox>

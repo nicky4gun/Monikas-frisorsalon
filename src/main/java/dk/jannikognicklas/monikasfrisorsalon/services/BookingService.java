@@ -1,8 +1,7 @@
 package dk.jannikognicklas.monikasfrisorsalon.services;
 
 import dk.jannikognicklas.monikasfrisorsalon.models.Booking;
-import dk.jannikognicklas.monikasfrisorsalon.models.BookingView;
-import dk.jannikognicklas.monikasfrisorsalon.models.Customer;
+import dk.jannikognicklas.monikasfrisorsalon.models.BookingView
 import dk.jannikognicklas.monikasfrisorsalon.models.enums.Status;
 import dk.jannikognicklas.monikasfrisorsalon.repositories.BookingRepository;
 import javafx.collections.ObservableList;

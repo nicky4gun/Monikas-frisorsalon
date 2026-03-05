@@ -91,9 +91,6 @@ public class BookingController implements ViewController<BookingService> {
 
     public void initialize() {
         datePicker.setValue(LocalDate.now());
-
-        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
-             bookingView.setItems(bookingService.searchBookings(newValue));});
     }
 
     // ------ Init helpers ------
@@ -238,6 +235,17 @@ public class BookingController implements ViewController<BookingService> {
             customerBox.setValue(customersService.findCustomerById(selected.getCustomerId()));
             noteArea.setText(selected.getNote());
         }
+    }
+
+    @FXML
+    protected void onSearch() {
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null || newValue.isBlank()) {
+                refreshSelectedDate();
+            } else {
+            bookingView.setItems(bookingService.searchBookings(newValue));
+            }
+        });
     }
 
     @FXML
