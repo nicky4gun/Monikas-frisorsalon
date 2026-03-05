@@ -18,7 +18,7 @@ public class SignUpController implements ViewController<EmployeeService> {
     @FXML private TextField usernameField;
     @FXML private PasswordField passwordField;
 
-    @FXML private Label loginMessageLabel;
+    @FXML private Label signUpMessageLabel;
 
     @Override
     public void setService(EmployeeService employeeService) {
@@ -63,7 +63,7 @@ public class SignUpController implements ViewController<EmployeeService> {
     }
 
     private void showSignUpMessage(String message, Color color) {
-        loginMessageLabel.setText(message);
-        loginMessageLabel.setTextFill(color);
+        signUpMessageLabel.setText(message);
+        signUpMessageLabel.setTextFill(color);
     }
 }
